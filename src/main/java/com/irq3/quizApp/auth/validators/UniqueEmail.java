@@ -10,9 +10,9 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = EmailFree.class)
-public @interface EmailAvailable {
-    String message() default "Invalid value";
+@Constraint(validatedBy = UniqueEmailImpl.class)
+public @interface UniqueEmail {
+    String message() default "Email have to be unique";
 
     Class<?>[] groups() default {};
 

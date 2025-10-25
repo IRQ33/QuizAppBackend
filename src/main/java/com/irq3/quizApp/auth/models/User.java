@@ -7,7 +7,10 @@ import com.irq3.quizApp.auth.enums.Permissions;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -34,9 +37,11 @@ public class User {
     @Convert(converter = PermissionConverter.class)
     @Column(columnDefinition = "TEXT")
     private List<Permissions> permissions;
-    //TODO: checky why created_at doesnt work
-    @Column(name = "created_at") Date createdAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", insertable = false)
+    Date createdAt;
     @JsonIgnore
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     Date updatedAt;
 

@@ -7,16 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmailFree implements ConstraintValidator<EmailAvailable, String> {
+public class UniqueNameImpl implements ConstraintValidator<UniqueEmail, String> {
     @Autowired UserRepository userRepository;
 
-    @Override public void initialize(EmailAvailable constraintAnnotation) {
+    @Override public void initialize(UniqueEmail constraintAnnotation) {
 
     }
 
     @Override public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
 
-        return !userRepository.existsByEmail(s);
+        return !userRepository.existsByUserName(s);
 
     }
 }

@@ -1,17 +1,16 @@
 package com.irq3.quizApp.auth.controllers;
 
 import com.irq3.quizApp.auth.dto.requests.UserCreate;
+import com.irq3.quizApp.auth.dto.requests.UserLoginEmail;
+import com.irq3.quizApp.auth.dto.requests.UserLoginName;
 import com.irq3.quizApp.auth.dto.response.UserInfo;
+import com.irq3.quizApp.auth.dto.response.UserLogin;
 import com.irq3.quizApp.auth.services.UserService;
 import com.irq3.quizApp.auth.utils.Result;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -26,7 +25,7 @@ public class UserController {
     public ResponseEntity<Result<UserInfo, String>> createUser(@Valid @RequestBody UserCreate userCreate, BindingResult br){
     //TODO: make better system for it
 //        if(br.hasErrors()){
-//            return ResponseEntity.badRequest().body(Result.resultError(br.getAllErrors()));
+//            return ResponseEntity.badRequest().body(Result.resultError(br.geAllErrors()));
 //        }
 
         return ResponseEntity.ok(userService.createUser(userCreate));
@@ -34,6 +33,15 @@ public class UserController {
     @GetMapping("count")
     public ResponseEntity<Long> countUsers(){
         return ResponseEntity.ok(userService.countOfUsers());
+    }
+
+    @PostMapping("login")
+    public ResponseEntity<Result<UserLogin, String>> loginUser(@Valid @RequestBody UserLoginEmail userLoginEmail, BindingResult br){
+        return ResponseEntity.ok(userService.loginUser(userLoginEmail));
+    }
+    @PostMapping("login")
+    public ResponseEntity<Result<UserLogin, String>> loginUser(@Valid @RequestBody UserLoginName userLoginName, BindingResult br){
+        return ResponseEntity.ok(userService.loginUser(userLoginName));
     }
 
 

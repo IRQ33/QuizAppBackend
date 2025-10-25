@@ -34,6 +34,7 @@ public class User {
     @Convert(converter = PermissionConverter.class)
     @Column(columnDefinition = "TEXT")
     private List<Permissions> permissions;
+    //TODO: checky why created_at doesnt work
     @Column(name = "created_at") Date createdAt;
     @JsonIgnore
     @Column(name = "updated_at")

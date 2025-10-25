@@ -14,7 +14,7 @@ class WebSecurity {
     //TODO: Auth2 there
     @Bean SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
         return security.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(req->{
-            req.requestMatchers("/api/v1/register","/api/v1/login").permitAll().anyRequest().authenticated();
+            req.requestMatchers("/api/v1/register","/api/v1/login","/api/v1/count","getUsers").permitAll().anyRequest().authenticated();
         }).build();
     }
 

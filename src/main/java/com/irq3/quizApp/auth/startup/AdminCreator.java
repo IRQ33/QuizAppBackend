@@ -22,7 +22,9 @@ class AdminCreator implements CommandLineRunner {
                 .permissions(List.of(Permissions.USER,Permissions.ADMIN,Permissions.OWNER))
                 .build();
 
-        userRepository.save(user);
+        if(!userRepository.existsByEmail(user.getEmail())){
+            userRepository.save(user);
+        }
 
     }
 }

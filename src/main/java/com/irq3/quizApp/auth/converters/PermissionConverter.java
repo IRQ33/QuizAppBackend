@@ -19,6 +19,7 @@ public class PermissionConverter implements AttributeConverter<List<Permissions>
 
     @Override public List<Permissions> convertToEntityAttribute(String s) {
         String[] array = s.split(",");
+
         List<Permissions> permissions = new ArrayList<>(array.length);
         for(var p : array){
             permissions.add(Permissions.valueOf(p.trim()));

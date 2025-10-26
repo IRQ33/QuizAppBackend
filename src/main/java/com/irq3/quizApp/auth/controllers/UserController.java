@@ -37,11 +37,11 @@ public class UserController {
 
     @PostMapping("login")
     public ResponseEntity<Result<UserLogin, String>> loginUser(@Valid @RequestBody UserLoginEmail userLoginEmail, BindingResult br){
-        return ResponseEntity.ok(userService.loginUser(userLoginEmail));
+        return ResponseEntity.ok(userService.getRefreshToken(userLoginEmail));
     }
     @PostMapping("login")
     public ResponseEntity<Result<UserLogin, String>> loginUser(@Valid @RequestBody UserLoginName userLoginName, BindingResult br){
-        return ResponseEntity.ok(userService.loginUser(userLoginName));
+        return ResponseEntity.ok(userService.getRefreshToken(userLoginName));
     }
 
 

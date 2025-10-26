@@ -11,8 +11,8 @@ import com.irq3.quizApp.auth.utils.Result;
 public interface UserService {
     Result<UserInfo,String> createUser(UserCreate userCreate);
     long countOfUsers();
-    Result<UserLogin,String> loginUser(UserLoginEmail userLoginEmail);
-    Result<UserLogin,String> loginUser(UserLoginName userLoginName);
+    Result<UserLogin,String> getRefreshToken(UserLoginEmail userLoginEmail);
+    Result<UserLogin,String> getRefreshToken(UserLoginName userLoginName);
 
 
 

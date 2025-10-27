@@ -35,12 +35,12 @@ public class UserController {
         return ResponseEntity.ok(userService.countOfUsers());
     }
 
-    @PostMapping("login")
-    public ResponseEntity<Result<UserLogin, String>> loginUser(@Valid @RequestBody UserLoginEmail userLoginEmail, BindingResult br){
+    @PostMapping("login_mail")
+    public ResponseEntity<Result<UserLogin, String>> loginUserByMail(@Valid @RequestBody UserLoginEmail userLoginEmail, BindingResult br){
         return ResponseEntity.ok(userService.getRefreshToken(userLoginEmail));
     }
-    @PostMapping("login")
-    public ResponseEntity<Result<UserLogin, String>> loginUser(@Valid @RequestBody UserLoginName userLoginName, BindingResult br){
+    @PostMapping("login_name")
+    public ResponseEntity<Result<UserLogin, String>> loginUserByLogin(@Valid @RequestBody UserLoginName userLoginName, BindingResult br){
         return ResponseEntity.ok(userService.getRefreshToken(userLoginName));
     }
 

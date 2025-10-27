@@ -1,0 +1,7 @@
+CREATE UNLOGGED TABLE jwt_refresh_tokens(
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    dateCreated TIMESTAMP NOT NULL,
+    dateExpired TIMESTAMP NOT NULL,
+    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id)
+);

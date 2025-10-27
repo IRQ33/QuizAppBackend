@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "JwtRefreshTokens")
+@Table(name = "jwt_refresh_tokens")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +18,8 @@ public class JwtRefreshToken {
     long id;
     private long user_id;
     private String token;
+    @Column(name = "dateexpired")
     private Date dateExpired;
+    @Column(name = "datecreated")
     private Date dateCreated;
 }

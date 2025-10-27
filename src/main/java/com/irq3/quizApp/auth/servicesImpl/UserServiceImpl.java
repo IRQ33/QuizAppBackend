@@ -9,6 +9,7 @@ import com.irq3.quizApp.auth.enums.Permissions;
 import com.irq3.quizApp.auth.models.User;
 import com.irq3.quizApp.auth.repositories.JwtRefreshRepository;
 import com.irq3.quizApp.auth.repositories.UserRepository;
+import com.irq3.quizApp.auth.services.RefreshJwtService;
 import com.irq3.quizApp.auth.services.UserService;
 import com.irq3.quizApp.auth.utils.Result;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,16 +23,15 @@ import java.util.Locale;
 class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtRefreshRepository jwtRefreshRepository;
+    private final RefreshJwtService jwtService;
 
-    UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtRefreshRepository jwtRefreshRepository) {
+    UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtRefreshRepository jwtRefreshRepository, RefreshJwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtRefreshRepository = jwtRefreshRepository;
+        this.jwtService = jwtService;
     }
 
     @Override public Result<UserInfo,String> createUser(UserCreate userCreate) {
-        //TODO: check make checking for it
         User user = User.builder()
                 .userName(userCreate.getName().trim())
                 .email(userCreate.getEmail().trim().toLowerCase(Locale.ROOT))
@@ -58,12 +58,24 @@ class UserServiceImpl implements UserService {
         }
         //TODO: more checks in the future
 
-
-
-        return null;
+        String token = jwtService.generateToken(user);
+        UserLogin userLogin = new UserLogin(user,token);
+        return Result.resultOk(userLogin);
     }
 
     @Override public Result<UserLogin, String> getRefreshToken(UserLoginName userLoginName) {
-        return null;
+        if(!userRepository.existsByUserName(userLoginName.getUserName())){
+            return Result.resultError("No user with this email");
+        }
+        User user = userRepository.getUserByUserName(userLoginName.getUserName());
+        if(!passwordEncoder.matches(userLoginName.getPassword(), user.getPassword())){
+            return Result.resultError("Wrong password");
+        }
+
+        //TODO: more checks in the future
+
+        String token = jwtService.generateToken(user);
+        UserLogin userLogin = new UserLogin(user,token);
+        return Result.resultOk(userLogin);
     }
 }

@@ -9,6 +9,6 @@ import java.util.Date;
 @Repository
 public interface JwtRefreshRepository extends JpaRepository<JwtRefreshToken,Long> {
     long getUserIdByToken(String token);
-    Date getDateExpiredByTokenByToken(String token);
+    Date getDateExpiredByToken(String token);
     boolean existsByToken(String token);
 }

@@ -12,10 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/")
 public class UserController {
     private final UserService userService;
+
 
     UserController(UserService userService) {
         this.userService = userService;
@@ -33,6 +36,11 @@ public class UserController {
     @GetMapping("count")
     public ResponseEntity<Long> countUsers(){
         return ResponseEntity.ok(userService.countOfUsers());
+    }
+
+    @PostMapping("login")
+    public ResponseEntity<Result<UserLogin,String>> loginUser(@RequestBody Map<String,Object> data){
+        return ResponseEntity.ok(userService.getRefreshToken(data));
     }
 
     @PostMapping("login_mail")

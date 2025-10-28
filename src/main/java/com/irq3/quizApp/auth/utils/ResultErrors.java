@@ -1,7 +1,10 @@
 package com.irq3.quizApp.auth.utils;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 //it can be useful in the future
+@JsonInclude(JsonInclude.Include.NON_NULL)
 record ResultErrors <O, E, E1>(O o, E e, E1 e1){
 
     public static <O, E, E1> ResultErrors<O, E, E1> resultOk(O value) {

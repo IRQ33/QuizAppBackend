@@ -1,5 +1,6 @@
 package com.irq3.quizApp.auth.dto.response;
 
+import com.irq3.quizApp.auth.enums.Tokens;
 import com.irq3.quizApp.auth.models.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,10 +9,12 @@ import lombok.Setter;
 @Setter
 public class UserLogin extends UserInfo {
     private String token;
+    private Tokens tokenType;
 
-    public UserLogin(User user, String token) {
+    public UserLogin(User user, String token, Tokens tokenType) {
         super(user);
         this.token = token;
+        this.tokenType = tokenType;
     }
 
 }

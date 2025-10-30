@@ -2,14 +2,17 @@ package com.irq3.quizApp.auth.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 class WebSecurity {
 
     private final JwtAuthFilter jwtAuthFilter;
@@ -20,8 +23,8 @@ class WebSecurity {
 
     //TODO: Auth2 there
     @Bean SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
-        return security.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(req->{
-            req.requestMatchers("/api/v1/register", "/api/v1/login","/api/v1/count","getUsers").permitAll().anyRequest().authenticated();
+        return security.csrf(csrf->csrf.disable()).authorizeHttpRequests(req->{
+            req.requestMatchers("/api/v1/register", "/api/v1/login","/api/v1/count","/api/v1/access","getUsers").permitAll().anyRequest().authenticated();
         }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
 

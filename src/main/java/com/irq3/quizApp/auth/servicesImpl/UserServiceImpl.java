@@ -8,6 +8,7 @@ import com.irq3.quizApp.auth.dto.response.UserInfo;
 import com.irq3.quizApp.auth.dto.response.UserLogin;
 import com.irq3.quizApp.auth.enums.Permissions;
 import com.irq3.quizApp.auth.enums.Tokens;
+import com.irq3.quizApp.auth.exceptions.TokenExpiredException;
 import com.irq3.quizApp.auth.models.User;
 import com.irq3.quizApp.auth.repositories.JwtRefreshRepository;
 import com.irq3.quizApp.auth.repositories.UserRepository;
@@ -113,13 +114,18 @@ class UserServiceImpl implements UserService {
                 return Result.resultError("Bad form of data");
             }
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             return Result.resultError("Bad form of data");
         }
     }
 
-    //TODO: Not tested rn
     @Override public Result<UserLogin, String> getAccesToken(String refreshToken) {
-        String token = jwtService.generateToken(refreshToken);
+        String token = "";
+        try {
+            token = jwtService.generateToken(refreshToken);
+        }catch (TokenExpiredException e){
+            return Result.resultError("Token expired");
+        }
         com.irq3.quizApp.auth.utils.Result<User,String> result = jwtService.getUser(token);
         if(result.isOk()){
             return Result.resultOk(new UserLogin(result.o(),token,Tokens.ACCESS));

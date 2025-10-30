@@ -1,13 +1,13 @@
 package com.irq3.quizApp.auth.controllers;
 
+import com.irq3.quizApp.auth.dto.requests.UserAccessToken;
 import com.irq3.quizApp.auth.dto.requests.UserCreate;
-import com.irq3.quizApp.auth.dto.requests.UserLoginEmail;
-import com.irq3.quizApp.auth.dto.requests.UserLoginName;
 import com.irq3.quizApp.auth.dto.response.UserInfo;
 import com.irq3.quizApp.auth.dto.response.UserLogin;
 import com.irq3.quizApp.auth.services.UserService;
 import com.irq3.quizApp.auth.utils.Result;
 import jakarta.validation.Valid;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -43,13 +43,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getRefreshToken(data));
     }
 
-    @PostMapping("login_mail")
-    public ResponseEntity<Result<UserLogin, String>> loginUserByMail(@Valid @RequestBody UserLoginEmail userLoginEmail, BindingResult br){
-        return ResponseEntity.ok(userService.getRefreshToken(userLoginEmail));
-    }
-    @PostMapping("login_name")
-    public ResponseEntity<Result<UserLogin, String>> loginUserByLogin(@Valid @RequestBody UserLoginName userLoginName, BindingResult br){
-        return ResponseEntity.ok(userService.getRefreshToken(userLoginName));
+
+    @PostMapping(value = "access",consumes = "application/json")
+    public ResponseEntity<Result<UserLogin,String>> getAccesToken(@RequestBody UserAccessToken token){
+        LoggerFactory.getLogger("app").debug(token.token());
+        return ResponseEntity.ok(userService.getAccesToken(token.token()));
     }
 
 

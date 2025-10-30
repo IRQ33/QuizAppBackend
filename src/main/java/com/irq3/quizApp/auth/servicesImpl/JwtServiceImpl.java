@@ -1,5 +1,6 @@
 package com.irq3.quizApp.auth.servicesImpl;
 
+import com.irq3.quizApp.auth.exceptions.TokenExpiredException;
 import com.irq3.quizApp.auth.models.User;
 import com.irq3.quizApp.auth.repositories.JwtRefreshRepository;
 import com.irq3.quizApp.auth.repositories.UserRepository;
@@ -44,7 +45,11 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override public String generateToken(String refreshToken) {
-        String email = refreshJwtService.getEmail(refreshToken);
+        String email = refreshJwtService.getEmail(refreshToken.trim());
+        Date date = jwtRefreshRepository.getJwtRefreshTokenByToken(refreshToken).getDateExpired();
+        if(date.getTime()<new Date().getTime()){
+            throw new TokenExpiredException();
+        }
         if(!userRepository.existsByEmail(email)){
             return "No User";
         }

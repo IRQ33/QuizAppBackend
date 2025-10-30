@@ -29,6 +29,7 @@ class JwtAuthFilter extends OncePerRequestFilter {
         String token = resolveToken(request);
         if(token!=null) {
             User user = jwtService.getUser(token).o();
+
             if(user!=null) {
                 List<SimpleGrantedAuthority> authorities = user.getPermissions().stream()
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
@@ -37,17 +38,16 @@ class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
-
         filterChain.doFilter(request, response);
+
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getRequestURI().startsWith("/api/login") || request.getRequestURI().startsWith("/api/register");
+        return request.getRequestURI().equals("/api/v1/register") || request.getRequestURI().equals("/api/v1/login")|| request.getRequestURI().equals("/api/v1/access");
     }
 
     private String resolveToken(HttpServletRequest request) {
-
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);

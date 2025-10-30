@@ -61,7 +61,7 @@ public class RefreshJwtServiceImpl implements com.irq3.quizApp.auth.services.Ref
     }
 
     @Override public Result<User, String> getUser(String token) {
-        Date expired = jwtRefreshRepository.getDateExpiredByToken(token);
+        Date expired = jwtRefreshRepository.getJwtRefreshTokenByToken(token).getDateExpired();
         if(new Date().getTime()>expired.getTime()|| jwtRefreshRepository.existsByToken(token)){
             return Result.resultError("Invalid Jwt");
         }

@@ -1,4 +1,4 @@
-package com.irq3.quizApp.auth.utils;
+package com.irq3.quizApp.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

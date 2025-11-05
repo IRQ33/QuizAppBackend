@@ -5,7 +5,8 @@ import com.irq3.quizApp.auth.dto.requests.UserCreate;
 import com.irq3.quizApp.auth.dto.response.UserInfo;
 import com.irq3.quizApp.auth.dto.response.UserLogin;
 import com.irq3.quizApp.auth.services.UserService;
-import com.irq3.quizApp.auth.utils.Result;
+import com.irq3.quizApp.utils.Result;
+import com.irq3.quizApp.utils.ResultCode;
 import jakarta.validation.Valid;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/user/")
 public class UserController {
     private final UserService userService;
 
@@ -26,10 +27,7 @@ public class UserController {
 
     @PostMapping("register")
     public ResponseEntity<Result<UserInfo, String>> createUser(@Valid @RequestBody UserCreate userCreate, BindingResult br){
-    //TODO: make better system for it
-//        if(br.hasErrors()){
-//            return ResponseEntity.badRequest().body(Result.resultError(br.geAllErrors()));
-//        }
+
 
         return ResponseEntity.ok(userService.createUser(userCreate));
     }
@@ -48,6 +46,11 @@ public class UserController {
     public ResponseEntity<Result<UserLogin,String>> getAccesToken(@RequestBody UserAccessToken token){
         LoggerFactory.getLogger("app").debug(token.token());
         return ResponseEntity.ok(userService.getAccesToken(token.token()));
+    }
+    @DeleteMapping("remove/{id}")
+    public ResponseEntity<ResultCode<String, String>> removeUser(@PathVariable("id") long id){
+        var delete = userService.deleteUser(id);
+        return ResponseEntity.status(delete.status()).body(delete);
     }
 
 

@@ -15,9 +15,11 @@ import com.irq3.quizApp.auth.repositories.UserRepository;
 import com.irq3.quizApp.auth.services.JwtService;
 import com.irq3.quizApp.auth.services.RefreshJwtService;
 import com.irq3.quizApp.auth.services.UserService;
-import com.irq3.quizApp.auth.utils.Result;
+import com.irq3.quizApp.utils.Result;
+import com.irq3.quizApp.utils.ResultCode;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +55,19 @@ class UserServiceImpl implements UserService {
                 .build();
         userRepository.save(user);
         return Result.resultOk(new UserInfo(user));
+    }
+
+    @Override public ResultCode<String, String> deleteUser(long id) {
+        var user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(id==user.getId()){
+            userRepository.delete(user);
+            return ResultCode.resultOk("Deleted user: "+user.getUserName());
+        }
+        return ResultCode.resultBadRequest("No authorities");
+    }
+
+    @Override public UserInfo getUser(long id) {
+        return new UserInfo(userRepository.getUserById(id));
     }
 
     @Override public long countOfUsers() {
@@ -126,7 +141,7 @@ class UserServiceImpl implements UserService {
         }catch (TokenExpiredException e){
             return Result.resultError("Token expired");
         }
-        com.irq3.quizApp.auth.utils.Result<User,String> result = jwtService.getUser(token);
+        Result<User,String> result = jwtService.getUser(token);
         if(result.isOk()){
             return Result.resultOk(new UserLogin(result.o(),token,Tokens.ACCESS));
         }

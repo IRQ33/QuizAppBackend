@@ -1,7 +1,7 @@
 package com.irq3.quizApp.auth.services;
 
 import com.irq3.quizApp.auth.models.User;
-import com.irq3.quizApp.auth.utils.Result;
+import com.irq3.quizApp.utils.Result;
 
 public interface JwtService {
     String generateToken(String refreshToken);

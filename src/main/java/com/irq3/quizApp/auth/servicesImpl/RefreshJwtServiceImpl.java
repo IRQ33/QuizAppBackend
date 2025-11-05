@@ -4,7 +4,7 @@ import com.irq3.quizApp.auth.models.JwtRefreshToken;
 import com.irq3.quizApp.auth.models.User;
 import com.irq3.quizApp.auth.repositories.JwtRefreshRepository;
 import com.irq3.quizApp.auth.repositories.UserRepository;
-import com.irq3.quizApp.auth.utils.Result;
+import com.irq3.quizApp.utils.Result;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;

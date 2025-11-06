@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "quiz")
@@ -27,9 +27,16 @@ public class Quiz {
     private long user_id;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", insertable = false)
-    Date createdAt;
+    LocalDateTime createdAt;
     @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
-    Date updatedAt;
+    LocalDateTime updatedAt;
+
+    public void changMe(Quiz quiz){
+        this.name = quiz.name;
+        this.hiddenName = quiz.hiddenName;
+        this.content = quiz.content;
+        this.updatedAt = LocalDateTime.now();
+    }
 }

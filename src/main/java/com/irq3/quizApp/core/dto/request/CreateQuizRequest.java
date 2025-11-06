@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor @NoArgsConstructor @Data
-public class CreateQuiz {
+public class CreateQuizRequest {
     @NotBlank
     @Size(min = 1,max = 255, message = "Bad size of name")
     String name;

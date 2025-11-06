@@ -1,10 +1,14 @@
 package com.irq3.quizApp.core.services;
 
-import com.irq3.quizApp.core.dto.request.CreateQuiz;
-import com.irq3.quizApp.core.dto.response.QuizMade;
+import com.irq3.quizApp.core.dto.request.CreateQuizRequest;
+import com.irq3.quizApp.core.dto.response.QuizInfoResponse;
+import com.irq3.quizApp.core.dto.response.QuizMadeResponse;
+import com.irq3.quizApp.core.models.Quiz;
 import com.irq3.quizApp.utils.ResultCode;
 
 public interface QuizService {
-    ResultCode<QuizMade,String> createQuiz(CreateQuiz quiz);
-
+    ResultCode<QuizMadeResponse,String> createQuiz(CreateQuizRequest quiz);
+    ResultCode<String, String> removeQuiz(long id);
+    ResultCode<QuizInfoResponse,String> getQuiz(long id);
+    ResultCode<QuizInfoResponse,String> changeQuiz(Quiz quiz);
 }

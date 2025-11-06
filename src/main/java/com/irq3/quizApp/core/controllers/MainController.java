@@ -1,6 +1,6 @@
 package com.irq3.quizApp.core.controllers;
 
-import com.irq3.quizApp.core.dto.request.CreateQuiz;
+import com.irq3.quizApp.core.dto.request.CreateQuizRequest;
 import com.irq3.quizApp.core.services.QuizService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ class MainController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> createPost(@Valid @RequestBody CreateQuiz quiz){
+    public ResponseEntity<?> createPost(@Valid @RequestBody CreateQuizRequest quiz){
         var create = quizService.createQuiz(quiz);
         return ResponseEntity.status(create.status()).body(create);
     }

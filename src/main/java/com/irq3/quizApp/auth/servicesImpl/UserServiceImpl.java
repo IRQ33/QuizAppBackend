@@ -1,11 +1,11 @@
 package com.irq3.quizApp.auth.servicesImpl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.irq3.quizApp.auth.dto.requests.UserCreate;
-import com.irq3.quizApp.auth.dto.requests.UserLoginEmail;
-import com.irq3.quizApp.auth.dto.requests.UserLoginName;
-import com.irq3.quizApp.auth.dto.response.UserInfo;
-import com.irq3.quizApp.auth.dto.response.UserLogin;
+import com.irq3.quizApp.auth.dto.requests.UserCreateRequest;
+import com.irq3.quizApp.auth.dto.requests.UserLoginEmailRequest;
+import com.irq3.quizApp.auth.dto.requests.UserLoginNameRequest;
+import com.irq3.quizApp.auth.dto.response.UserInfoResponse;
+import com.irq3.quizApp.auth.dto.response.UserLoginResponse;
 import com.irq3.quizApp.auth.enums.Permissions;
 import com.irq3.quizApp.auth.enums.Tokens;
 import com.irq3.quizApp.auth.exceptions.TokenExpiredException;
@@ -23,7 +23,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 class UserServiceImpl implements UserService {
@@ -44,17 +48,17 @@ class UserServiceImpl implements UserService {
         this.validator = validator;
     }
 
-    @Override public Result<UserInfo,String> createUser(UserCreate userCreate) {
+    @Override public Result<UserInfoResponse,String> createUser(UserCreateRequest userCreateRequest) {
         User user = User.builder()
-                .userName(userCreate.getName().trim())
-                .email(userCreate.getEmail().trim().toLowerCase(Locale.ROOT))
-                .password(passwordEncoder.encode(userCreate.getPassword().trim()))
+                .userName(userCreateRequest.getName().trim())
+                .email(userCreateRequest.getEmail().trim().toLowerCase(Locale.ROOT))
+                .password(passwordEncoder.encode(userCreateRequest.getPassword().trim()))
                 .permissions(List.of(Permissions.USER))
-                .createdAt(new Date())
-                .updatedAt(new Date())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
         userRepository.save(user);
-        return Result.resultOk(new UserInfo(user));
+        return Result.resultOk(new UserInfoResponse(user));
     }
 
     @Override public ResultCode<String, String> deleteUser(long id) {
@@ -66,59 +70,59 @@ class UserServiceImpl implements UserService {
         return ResultCode.resultBadRequest("No authorities");
     }
 
-    @Override public UserInfo getUser(long id) {
-        return new UserInfo(userRepository.getUserById(id));
+    @Override public UserInfoResponse getUser(long id) {
+        return new UserInfoResponse(userRepository.getUserById(id));
     }
 
     @Override public long countOfUsers() {
         return userRepository.count();
     }
 
-    @Override public Result<UserLogin, String> getRefreshToken(UserLoginEmail userLoginEmail) {
-        if(!userRepository.existsByEmail(userLoginEmail.getEmail())){
+    @Override public Result<UserLoginResponse, String> getRefreshToken(UserLoginEmailRequest userLoginEmailRequest) {
+        if(!userRepository.existsByEmail(userLoginEmailRequest.getEmail())){
             return Result.resultError("No user with this email");
         }
-        User user = userRepository.getUserByEmail(userLoginEmail.getEmail());
-        if(!passwordEncoder.matches(userLoginEmail.getPassword(), user.getPassword())){
+        User user = userRepository.getUserByEmail(userLoginEmailRequest.getEmail());
+        if(!passwordEncoder.matches(userLoginEmailRequest.getPassword(), user.getPassword())){
             return Result.resultError("Wrong password");
         }
         //TODO: more checks in the future
 
         String token = refreshJwtService.generateToken(user);
-        UserLogin userLogin = new UserLogin(user,token, Tokens.REFRESH);
+        UserLoginResponse userLogin = new UserLoginResponse(user,token, Tokens.REFRESH);
         return Result.resultOk(userLogin);
     }
 
-    @Override public Result<UserLogin, String> getRefreshToken(UserLoginName userLoginName) {
-        if(!userRepository.existsByUserName(userLoginName.getUserName())){
+    @Override public Result<UserLoginResponse, String> getRefreshToken(UserLoginNameRequest userLoginNameRequest) {
+        if(!userRepository.existsByUserName(userLoginNameRequest.getUserName())){
             return Result.resultError("No user with this email");
         }
-        User user = userRepository.getUserByUserName(userLoginName.getUserName());
-        if(!passwordEncoder.matches(userLoginName.getPassword(), user.getPassword())){
+        User user = userRepository.getUserByUserName(userLoginNameRequest.getUserName());
+        if(!passwordEncoder.matches(userLoginNameRequest.getPassword(), user.getPassword())){
             return Result.resultError("Wrong password");
         }
 
         //TODO: more checks in the future
 
         String token = refreshJwtService.generateToken(user);
-        UserLogin userLogin = new UserLogin(user,token,Tokens.REFRESH);
+        UserLoginResponse userLogin = new UserLoginResponse(user,token,Tokens.REFRESH);
         return Result.resultOk(userLogin);
     }
 
-    @Override public Result<UserLogin, String> getRefreshToken(Map<String, Object> rawBody) {
+    @Override public Result<UserLoginResponse, String> getRefreshToken(Map<String, Object> rawBody) {
         try {
             if(rawBody.containsKey("email")){
-                UserLoginEmail userLoginEmail = objectMapper.convertValue(rawBody,UserLoginEmail.class);
-                Set<ConstraintViolation<UserLoginEmail>> violations = validator.validate(userLoginEmail);
+                UserLoginEmailRequest userLoginEmailRequest = objectMapper.convertValue(rawBody, UserLoginEmailRequest.class);
+                Set<ConstraintViolation<UserLoginEmailRequest>> violations = validator.validate(userLoginEmailRequest);
                 if (!violations.isEmpty()) {
                     return Result.resultError(violations.stream().map(ConstraintViolation::getMessage).toList().toString());
                 }
 
-                return this.getRefreshToken(userLoginEmail);
+                return this.getRefreshToken(userLoginEmailRequest);
             }else if(rawBody.containsKey("username")){
-                UserLoginName nameLogin = objectMapper.convertValue(rawBody, UserLoginName.class);
+                UserLoginNameRequest nameLogin = objectMapper.convertValue(rawBody, UserLoginNameRequest.class);
 
-                Set<ConstraintViolation<UserLoginName>> violations = validator.validate(nameLogin);
+                Set<ConstraintViolation<UserLoginNameRequest>> violations = validator.validate(nameLogin);
                 if (!violations.isEmpty()) {
                     return Result.resultError(violations.stream().map(ConstraintViolation::getMessage).toList().toString());
                 }
@@ -134,7 +138,7 @@ class UserServiceImpl implements UserService {
         }
     }
 
-    @Override public Result<UserLogin, String> getAccesToken(String refreshToken) {
+    @Override public Result<UserLoginResponse, String> getAccesToken(String refreshToken) {
         String token = "";
         try {
             token = jwtService.generateToken(refreshToken);
@@ -143,7 +147,7 @@ class UserServiceImpl implements UserService {
         }
         Result<User,String> result = jwtService.getUser(token);
         if(result.isOk()){
-            return Result.resultOk(new UserLogin(result.o(),token,Tokens.ACCESS));
+            return Result.resultOk(new UserLoginResponse(result.o(),token,Tokens.ACCESS));
         }
 
         return Result.resultError(result.e());

@@ -1,33 +1,78 @@
 package com.irq3.quizApp.core.servicesImpl;
 
 import com.irq3.quizApp.auth.models.User;
-import com.irq3.quizApp.core.dto.request.CreateQuiz;
-import com.irq3.quizApp.core.dto.response.QuizMade;
+import com.irq3.quizApp.core.dto.request.CreateQuizRequest;
+import com.irq3.quizApp.core.dto.response.QuizInfoResponse;
+import com.irq3.quizApp.core.dto.response.QuizMadeResponse;
+import com.irq3.quizApp.core.mappers.QuizMapper;
 import com.irq3.quizApp.core.models.Quiz;
 import com.irq3.quizApp.core.repositories.QuizRepository;
 import com.irq3.quizApp.core.services.QuizService;
 import com.irq3.quizApp.utils.ResultCode;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Service
 class QuizServiceImpl implements QuizService {
 
     private final QuizRepository quizRepository;
+    private final QuizMapper quizMapper;
 
-    public QuizServiceImpl(QuizRepository quizRepository) {
+    public QuizServiceImpl(QuizRepository quizRepository, QuizMapper quizMapper) {
         this.quizRepository = quizRepository;
+        this.quizMapper = quizMapper;
     }
 
-    @Override public ResultCode<QuizMade, String> createQuiz(CreateQuiz createQuiz) {
+    @Transactional
+    @Override public ResultCode<QuizMadeResponse, String> createQuiz(CreateQuizRequest createQuizRequest) {
         var user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(user==null) return ResultCode.resultError("No user");
-        Quiz quiz = Quiz.builder().name(createQuiz.getName()).hiddenName(createQuiz.getName())
-                .content(createQuiz.getContent()).description(createQuiz.getDescription())
-                .createdAt(new Date()).user_id(user.getId()).build();
+        Quiz quiz = Quiz.builder().name(createQuizRequest.getName()).hiddenName(createQuizRequest.getName())
+                .content(createQuizRequest.getContent()).description(createQuizRequest.getDescription())
+                .createdAt(LocalDateTime.now()).user_id(user.getId()).build();
         quizRepository.save(quiz);
-        return ResultCode.resultOk(new QuizMade(quiz));
+        return ResultCode.resultOk(quizMapper.toQuizMadeResponse(quiz));
     }
+
+    @Transactional
+    @Override public ResultCode<String, String> removeQuiz(long id) {
+        var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var quiz = quizRepository.getQuizById(id);
+        if(quiz==null){
+            return ResultCode.resultBadRequest("There is no quiz with that id");
+        }
+        if (user.getId()!=quiz.getId()){
+            return ResultCode.resultBadRequest("No permissions");
+        }
+
+        quizRepository.delete(quiz);
+        return ResultCode.resultOk("We made it");
+    }
+
+    @Transactional
+    @Override public ResultCode<QuizInfoResponse, String> getQuiz(long id) {
+        var quiz = quizRepository.getQuizById(id);
+        if(quiz==null){
+            return ResultCode.resultBadRequest("There is no quiz with that id");
+        }
+        return ResultCode.resultOk(quizMapper.toQuizInfoResponse(quiz));
+    }
+
+    @Transactional
+    @Override public ResultCode<QuizInfoResponse, String> changeQuiz(Quiz quiz) {
+        var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(quiz==null){
+            return ResultCode.resultBadRequest("There is no quiz with that id");
+        }
+        if (user.getId()!=quiz.getId()){
+            return ResultCode.resultBadRequest("No permissions");
+        }
+
+        quiz.changMe(quiz);
+        return ResultCode.resultOk(quizMapper.toQuizInfoResponse(quiz));
+    }
+
 }

@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter @Getter public class UserCreate {
+@Setter @Getter public class UserCreateRequest {
     @Size(max = 255, message = "Your name is too big")
     @UniqueName
     String name;
@@ -19,13 +19,13 @@ import lombok.Setter;
     @Size(min = 8,max = 255, message = "Your password have to have minimum 8 characters")
     String password;
 
-    public UserCreate(String name, String email, String password) {
+    public UserCreateRequest(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    public UserCreate() {
+    public UserCreateRequest() {
     }
 
 }

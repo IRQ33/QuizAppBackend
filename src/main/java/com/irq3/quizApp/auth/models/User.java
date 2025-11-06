@@ -12,7 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -39,11 +39,10 @@ public class User {
     private List<Permissions> permissions;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", insertable = false)
-    Date createdAt;
+    LocalDateTime createdAt;
     @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
-    Date updatedAt;
-
+    LocalDateTime updatedAt;
 
 }

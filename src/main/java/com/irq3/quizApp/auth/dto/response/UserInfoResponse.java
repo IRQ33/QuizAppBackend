@@ -4,15 +4,15 @@ import com.irq3.quizApp.auth.models.User;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class UserInfo {
+public class UserInfoResponse {
     long id;
     String name;
-    Date createdAt;
-    public UserInfo(User user){
+    LocalDateTime createdAt;
+    public UserInfoResponse(User user){
         this.id = user.getId();
         this.name = user.getUserName();
         this.createdAt=user.getCreatedAt();

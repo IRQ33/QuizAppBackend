@@ -1,15 +1,13 @@
 package com.irq3.quizApp.auth;
 
 import com.irq3.quizApp.auth.controllers.UserController;
-import com.irq3.quizApp.auth.dto.requests.UserCreate;
+import com.irq3.quizApp.auth.dto.requests.UserCreateRequest;
 import com.irq3.quizApp.auth.repositories.UserRepository;
 import com.irq3.quizApp.auth.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @SpringBootTest
@@ -22,7 +20,7 @@ class CreateUser {
     //wrong email
     @Test
      void testMail(){
-        UserCreate userCreate = new UserCreate("a","test","12345678");
+        UserCreateRequest userCreateRequest = new UserCreateRequest("a","test","12345678");
 
     }
 

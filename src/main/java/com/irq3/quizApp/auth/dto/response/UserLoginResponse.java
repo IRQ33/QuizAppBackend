@@ -7,11 +7,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserLogin extends UserInfo {
+public class UserLoginResponse extends UserInfoResponse {
     private String token;
     private Tokens tokenType;
 
-    public UserLogin(User user, String token, Tokens tokenType) {
+    public UserLoginResponse(User user, String token, Tokens tokenType) {
         super(user);
         this.token = token;
         this.tokenType = tokenType;

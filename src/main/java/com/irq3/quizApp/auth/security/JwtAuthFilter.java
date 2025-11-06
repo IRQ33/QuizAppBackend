@@ -2,6 +2,7 @@ package com.irq3.quizApp.auth.security;
 
 import com.irq3.quizApp.auth.models.User;
 import com.irq3.quizApp.auth.services.JwtService;
+import com.irq3.quizApp.auth.services.RefreshJwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,31 +21,39 @@ import java.util.List;
 class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final RefreshJwtService refreshJwtService;
 
-    JwtAuthFilter(JwtService jwtService) {
+    JwtAuthFilter(JwtService jwtService, RefreshJwtService refreshJwtService) {
         this.jwtService = jwtService;
+        this.refreshJwtService = refreshJwtService;
     }
 
     @Override protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = resolveToken(request);
         if(token!=null) {
-            User user = jwtService.getUser(token).o();
+            User user = refreshJwtService.getUser(token).o();
 
             if(user!=null) {
+                System.out.println(user.getUserName());
                 List<SimpleGrantedAuthority> authorities = user.getPermissions().stream()
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                         .toList();
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                System.out.println(SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
+                System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
             }
         }
+        System.out.println("Before chain, auth: " + SecurityContextHolder.getContext().getAuthentication());
         filterChain.doFilter(request, response);
+        System.out.println("After chain, auth: " + SecurityContextHolder.getContext().getAuthentication());
+
 
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getRequestURI().equals("/api/v1/register") || request.getRequestURI().equals("/api/v1/login")|| request.getRequestURI().equals("/api/v1/access");
+        return request.getRequestURI().equals("/api/v1/user/register") || request.getRequestURI().equals("/api/v1/user/login")|| request.getRequestURI().equals("/api/v1/user/access");
     }
 
     private String resolveToken(HttpServletRequest request) {

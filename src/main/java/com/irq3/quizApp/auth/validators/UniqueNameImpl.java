@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UniqueNameImpl implements ConstraintValidator<UniqueEmail, String> {
+public class UniqueNameImpl implements ConstraintValidator<UniqueName, String> {
     @Autowired UserRepository userRepository;
 
     @Override public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {

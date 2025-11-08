@@ -6,7 +6,7 @@ import com.irq3.quizApp.auth.repositories.JwtRefreshRepository;
 import com.irq3.quizApp.auth.repositories.UserRepository;
 import com.irq3.quizApp.auth.services.JwtService;
 import com.irq3.quizApp.auth.services.RefreshJwtService;
-import com.irq3.quizApp.utils.Result;
+import com.irq3.quizApp.utils.ResultCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
@@ -63,22 +63,22 @@ public class JwtServiceImpl implements JwtService {
                 .issuedAt(createdDate).compact();
     }
 
-    @Override public Result<String,RuntimeException> getEmail(String token) {
+    @Override public ResultCode<String,RuntimeException> getEmail(String token) {
         try {
             JwtParser parser = Jwts.parser().verifyWith(getKey()).build();
             Claims claims = parser.parseSignedClaims(token).getPayload();
-            return Result.resultOk(claims.getSubject());
+            return ResultCode.resultOk(claims.getSubject());
         } catch (JwtException e) {
-            return Result.resultError(e);
+            return ResultCode.resultError(e);
         }
 
     }
 
-    @Override public Result<User, String> getUser(String token) {
-        Result<String,RuntimeException> result = getEmail(token);
+    @Override public ResultCode<User, String> getUser(String token) {
+        ResultCode<String,RuntimeException> result = getEmail(token);
         if(result.isOk()){
-            return Result.resultOk(userRepository.getUserByEmail(result.o()));
+            return ResultCode.resultOk(userRepository.getUserByEmail(result.o()));
         }
-        return Result.resultError("Wrong token");
+        return ResultCode.resultError("Wrong token");
     }
 }

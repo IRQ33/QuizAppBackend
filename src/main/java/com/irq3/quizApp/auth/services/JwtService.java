@@ -1,10 +1,10 @@
 package com.irq3.quizApp.auth.services;
 
 import com.irq3.quizApp.auth.models.User;
-import com.irq3.quizApp.utils.Result;
+import com.irq3.quizApp.utils.ResultCode;
 
 public interface JwtService {
     String generateToken(String refreshToken);
-    Result<String,RuntimeException> getEmail(String token);
-    Result<User,String> getUser(String token);
+    ResultCode<String,RuntimeException> getEmail(String token);
+    ResultCode<User,String> getUser(String token);
 }

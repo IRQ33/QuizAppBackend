@@ -19,5 +19,8 @@ public record ResultCode<O,E>(O o, E e, @JsonIgnore HttpStatus status) {
     public static <O, E> ResultCode<O, E> resultCustom(O value, HttpStatus status) {
         return new ResultCode<>(value, null, status);
     }
+    public boolean isOk(){
+        return e==null;
+    }
 
 }

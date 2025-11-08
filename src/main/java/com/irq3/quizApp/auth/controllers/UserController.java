@@ -5,10 +5,8 @@ import com.irq3.quizApp.auth.dto.requests.UserCreateRequest;
 import com.irq3.quizApp.auth.dto.response.UserInfoResponse;
 import com.irq3.quizApp.auth.dto.response.UserLoginResponse;
 import com.irq3.quizApp.auth.services.UserService;
-import com.irq3.quizApp.utils.Result;
 import com.irq3.quizApp.utils.ResultCode;
 import jakarta.validation.Valid;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -28,8 +26,9 @@ public class UserController {
 
     @Transactional
     @PostMapping("register")
-    public ResponseEntity<Result<UserInfoResponse, String>> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest, BindingResult br){
-        return ResponseEntity.ok(userService.createUser(userCreateRequest));
+    public ResponseEntity<ResultCode<UserInfoResponse, String>> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest, BindingResult br){
+        var create = userService.createUser(userCreateRequest);
+        return ResponseEntity.status(create.status()).body(create);
     }
 
     @Transactional(readOnly = true)
@@ -40,15 +39,16 @@ public class UserController {
 
     @Transactional
     @PostMapping("login")
-    public ResponseEntity<Result<UserLoginResponse,String>> loginUser(@RequestBody Map<String,Object> data){
-        return ResponseEntity.ok(userService.getRefreshToken(data));
+    public ResponseEntity<ResultCode<UserLoginResponse,String>> loginUser(@RequestBody Map<String,Object> data){
+        var login = userService.getRefreshToken(data);
+        return ResponseEntity.status(login.status()).body(login);
     }
 
     @Transactional
     @PostMapping(value = "access",consumes = "application/json")
-    public ResponseEntity<Result<UserLoginResponse,String>> getAccesToken(@RequestBody UserAccessTokenRequest token){
-        LoggerFactory.getLogger("app").debug(token.token());
-        return ResponseEntity.ok(userService.getAccesToken(token.token()));
+    public ResponseEntity<ResultCode<UserLoginResponse,String>> getAccesToken(@RequestBody UserAccessTokenRequest token){
+        var acces = userService.getAccesToken(token.token());
+        return ResponseEntity.status(acces.status()).body(acces);
     }
 
     @Transactional

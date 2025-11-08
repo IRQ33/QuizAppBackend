@@ -34,19 +34,15 @@ class JwtAuthFilter extends OncePerRequestFilter {
             User user = refreshJwtService.getUser(token).o();
 
             if(user!=null) {
-                System.out.println(user.getUserName());
                 List<SimpleGrantedAuthority> authorities = user.getPermissions().stream()
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                         .toList();
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                System.out.println(SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
-                System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
+
             }
         }
-        System.out.println("Before chain, auth: " + SecurityContextHolder.getContext().getAuthentication());
         filterChain.doFilter(request, response);
-        System.out.println("After chain, auth: " + SecurityContextHolder.getContext().getAuthentication());
 
 
     }

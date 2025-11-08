@@ -15,7 +15,6 @@ import com.irq3.quizApp.auth.repositories.UserRepository;
 import com.irq3.quizApp.auth.services.JwtService;
 import com.irq3.quizApp.auth.services.RefreshJwtService;
 import com.irq3.quizApp.auth.services.UserService;
-import com.irq3.quizApp.utils.Result;
 import com.irq3.quizApp.utils.ResultCode;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
@@ -48,7 +47,7 @@ class UserServiceImpl implements UserService {
         this.validator = validator;
     }
 
-    @Override public Result<UserInfoResponse,String> createUser(UserCreateRequest userCreateRequest) {
+    @Override public ResultCode<UserInfoResponse,String> createUser(UserCreateRequest userCreateRequest) {
         User user = User.builder()
                 .userName(userCreateRequest.getName().trim())
                 .email(userCreateRequest.getEmail().trim().toLowerCase(Locale.ROOT))
@@ -58,7 +57,7 @@ class UserServiceImpl implements UserService {
                 .updatedAt(LocalDateTime.now())
                 .build();
         userRepository.save(user);
-        return Result.resultOk(new UserInfoResponse(user));
+        return ResultCode.resultOk(new UserInfoResponse(user));
     }
 
     @Override public ResultCode<String, String> deleteUser(long id) {
@@ -78,44 +77,44 @@ class UserServiceImpl implements UserService {
         return userRepository.count();
     }
 
-    @Override public Result<UserLoginResponse, String> getRefreshToken(UserLoginEmailRequest userLoginEmailRequest) {
+    @Override public ResultCode<UserLoginResponse, String> getRefreshToken(UserLoginEmailRequest userLoginEmailRequest) {
         if(!userRepository.existsByEmail(userLoginEmailRequest.getEmail())){
-            return Result.resultError("No user with this email");
+            return ResultCode.resultError("No user with this email");
         }
         User user = userRepository.getUserByEmail(userLoginEmailRequest.getEmail());
         if(!passwordEncoder.matches(userLoginEmailRequest.getPassword(), user.getPassword())){
-            return Result.resultError("Wrong password");
+            return ResultCode.resultError("Wrong password");
         }
         //TODO: more checks in the future
 
         String token = refreshJwtService.generateToken(user);
         UserLoginResponse userLogin = new UserLoginResponse(user,token, Tokens.REFRESH);
-        return Result.resultOk(userLogin);
+        return ResultCode.resultOk(userLogin);
     }
 
-    @Override public Result<UserLoginResponse, String> getRefreshToken(UserLoginNameRequest userLoginNameRequest) {
+    @Override public ResultCode<UserLoginResponse, String> getRefreshToken(UserLoginNameRequest userLoginNameRequest) {
         if(!userRepository.existsByUserName(userLoginNameRequest.getUserName())){
-            return Result.resultError("No user with this email");
+            return ResultCode.resultError("No user with this email");
         }
         User user = userRepository.getUserByUserName(userLoginNameRequest.getUserName());
         if(!passwordEncoder.matches(userLoginNameRequest.getPassword(), user.getPassword())){
-            return Result.resultError("Wrong password");
+            return ResultCode.resultError("Wrong password");
         }
 
         //TODO: more checks in the future
 
         String token = refreshJwtService.generateToken(user);
         UserLoginResponse userLogin = new UserLoginResponse(user,token,Tokens.REFRESH);
-        return Result.resultOk(userLogin);
+        return ResultCode.resultOk(userLogin);
     }
 
-    @Override public Result<UserLoginResponse, String> getRefreshToken(Map<String, Object> rawBody) {
+    @Override public ResultCode<UserLoginResponse, String> getRefreshToken(Map<String, Object> rawBody) {
         try {
             if(rawBody.containsKey("email")){
                 UserLoginEmailRequest userLoginEmailRequest = objectMapper.convertValue(rawBody, UserLoginEmailRequest.class);
                 Set<ConstraintViolation<UserLoginEmailRequest>> violations = validator.validate(userLoginEmailRequest);
                 if (!violations.isEmpty()) {
-                    return Result.resultError(violations.stream().map(ConstraintViolation::getMessage).toList().toString());
+                    return ResultCode.resultError(violations.stream().map(ConstraintViolation::getMessage).toList().toString());
                 }
 
                 return this.getRefreshToken(userLoginEmailRequest);
@@ -124,33 +123,33 @@ class UserServiceImpl implements UserService {
 
                 Set<ConstraintViolation<UserLoginNameRequest>> violations = validator.validate(nameLogin);
                 if (!violations.isEmpty()) {
-                    return Result.resultError(violations.stream().map(ConstraintViolation::getMessage).toList().toString());
+                    return ResultCode.resultError(violations.stream().map(ConstraintViolation::getMessage).toList().toString());
                 }
 
                 return this.getRefreshToken(nameLogin);
             }
             else {
-                return Result.resultError("Bad form of data");
+                return ResultCode.resultError("Bad form of data");
             }
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
-            return Result.resultError("Bad form of data");
+            return ResultCode.resultError("Bad form of data");
         }
     }
 
-    @Override public Result<UserLoginResponse, String> getAccesToken(String refreshToken) {
+    @Override public ResultCode<UserLoginResponse, String> getAccesToken(String refreshToken) {
         String token = "";
         try {
             token = jwtService.generateToken(refreshToken);
         }catch (TokenExpiredException e){
-            return Result.resultError("Token expired");
+            return ResultCode.resultError("Token expired");
         }
-        Result<User,String> result = jwtService.getUser(token);
+        ResultCode<User,String> result = jwtService.getUser(token);
         if(result.isOk()){
-            return Result.resultOk(new UserLoginResponse(result.o(),token,Tokens.ACCESS));
+            return ResultCode.resultOk(new UserLoginResponse(result.o(),token,Tokens.ACCESS));
         }
 
-        return Result.resultError(result.e());
+        return ResultCode.resultError(result.e());
     }
 
 

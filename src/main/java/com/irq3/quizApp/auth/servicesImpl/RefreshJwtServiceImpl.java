@@ -4,7 +4,7 @@ import com.irq3.quizApp.auth.models.JwtRefreshToken;
 import com.irq3.quizApp.auth.models.User;
 import com.irq3.quizApp.auth.repositories.JwtRefreshRepository;
 import com.irq3.quizApp.auth.repositories.UserRepository;
-import com.irq3.quizApp.utils.Result;
+import com.irq3.quizApp.utils.ResultCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Primary
@@ -62,13 +63,22 @@ public class RefreshJwtServiceImpl implements com.irq3.quizApp.auth.services.Ref
         return claims.getSubject();
     }
 
-    @Override public Result<User, String> getUser(String token) {
+    @Override public ResultCode<User, String> getUser(String token) {
         Date expired = jwtRefreshRepository.getJwtRefreshTokenByToken(token).getDateExpired();
         if(new Date().after(expired) || !jwtRefreshRepository.existsByToken(token)){
             System.out.println(jwtRefreshRepository.existsByToken(token));
             System.out.println(new Date().getTime()>expired.getTime());
-            return Result.resultError("Invalid Jwt");
+            return ResultCode.resultError("Invalid Jwt");
         }
-        return Result.resultOk(userRepository.getUserByEmail(getEmail(token)));
+        return ResultCode.resultOk(userRepository.getUserByEmail(getEmail(token)));
+    }
+
+    @Override public void deleteExpiredTokens() {
+        List<JwtRefreshToken> list = jwtRefreshRepository.findAll();
+        for (var t : list){
+            if(t.getDateExpired().getTime()<new Date().getTime()){
+                jwtRefreshRepository.delete(t);
+            }
+        }
     }
 }

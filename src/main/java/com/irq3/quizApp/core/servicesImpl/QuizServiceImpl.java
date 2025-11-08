@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 class QuizServiceImpl implements QuizService {
@@ -73,6 +74,12 @@ class QuizServiceImpl implements QuizService {
 
         quiz.changMe(quiz);
         return ResultCode.resultOk(quizMapper.toQuizInfoResponse(quiz));
+    }
+
+    @Transactional(readOnly = true)
+    @Override public ResultCode<List<QuizInfoResponse>, String> getAllQuizes() {
+        return ResultCode.resultOk(quizRepository.findAll()
+                .stream().map(quizMapper::toQuizInfoResponse).toList());
     }
 
 }

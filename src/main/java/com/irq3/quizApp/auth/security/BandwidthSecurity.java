@@ -13,7 +13,6 @@ import java.time.Duration;
 
 @Component
 class BandwidthSecurity implements HandlerInterceptor {
-    //TODO: On production 5 tokens for 1 hour
     private final Bucket bucket = Bucket.builder().addLimit(limit-> limit.capacity(5).refillGreedy(5, Duration.ofSeconds(1))).build();
 
 

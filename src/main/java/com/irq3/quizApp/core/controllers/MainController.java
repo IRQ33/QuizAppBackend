@@ -1,16 +1,14 @@
 package com.irq3.quizApp.core.controllers;
 
 import com.irq3.quizApp.core.dto.request.CreateQuizRequest;
+import com.irq3.quizApp.core.dto.request.DeleteQuizRequest;
 import com.irq3.quizApp.core.services.QuizService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/post/")
+@RequestMapping("/api/v1/quiz/")
 class MainController {
     private final QuizService quizService;
 
@@ -19,9 +17,19 @@ class MainController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> createPost(@Valid @RequestBody CreateQuizRequest quiz){
+    public ResponseEntity<?> createQuiz(@Valid @RequestBody CreateQuizRequest quiz){
         var create = quizService.createQuiz(quiz);
         return ResponseEntity.status(create.status()).body(create);
+    }
+
+    @GetMapping("all")
+    public ResponseEntity<?> getQuiz(){
+        return ResponseEntity.ok(quizService.getAllQuizes().o());
+    }
+    @DeleteMapping("delete")
+    public ResponseEntity<?> removeQuiz(@RequestBody DeleteQuizRequest deleteQuizRequest){
+        var delete = quizService.removeQuiz(deleteQuizRequest.id());
+        return ResponseEntity.status(delete.status()).body(delete);
     }
 
 }

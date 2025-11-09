@@ -51,7 +51,7 @@ public class User {
     LocalDateTime dateOfBirth;
 
 
-    public boolean isMinor(){
+    public boolean isMinor() {
         return dateOfBirth.isAfter(LocalDate.now().minusYears(18).atStartOfDay());
     }
 

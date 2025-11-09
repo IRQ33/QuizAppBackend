@@ -7,8 +7,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface QuizRepository extends JpaRepository<Quiz,Long> {
+public interface QuizRepository extends JpaRepository<Quiz, Long> {
     Quiz getQuizById(long id);
+
     @Query(nativeQuery = true, value = "SELECT * FROM quiz e ORDER BY similarity(LOWER(e.hiddenName), LOWER(:name)) DESC LIMIT 10")
     List<Quiz> getSimilarQuizzes(@Param("name") String name);
 }

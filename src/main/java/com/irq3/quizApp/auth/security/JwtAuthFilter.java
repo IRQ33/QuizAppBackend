@@ -4,7 +4,6 @@ import com.irq3.quizApp.auth.models.User;
 import com.irq3.quizApp.auth.services.JwtService;
 import com.irq3.quizApp.auth.services.RefreshJwtService;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
 import java.util.List;
 
 @Component
@@ -28,12 +26,12 @@ class JwtAuthFilter extends OncePerRequestFilter {
         this.refreshJwtService = refreshJwtService;
     }
 
-    @Override protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    @Override protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         String token = resolveToken(request);
-        if(token!=null) {
+        if (token != null) {
             User user = jwtService.getUser(token).o();
 
-            if(user!=null) {
+            if (user != null) {
                 List<SimpleGrantedAuthority> authorities = user.getPermissions().stream()
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                         .toList();
@@ -43,15 +41,12 @@ class JwtAuthFilter extends OncePerRequestFilter {
             }
             throw new RuntimeException("Invalid access key");
         }
-
-
-
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getRequestURI().equals("/api/v1/user/register")
-                || request.getRequestURI().equals("/api/v1/user/login")||
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return request.getRequestURI().equals("/api/v1/user/register") ||
+                request.getRequestURI().equals("/api/v1/user/login") ||
                 request.getRequestURI().equals("/api/v1/user/access") ||
                 request.getRequestURI().startsWith("/v3/") ||
                 request.getRequestURI().startsWith("/swagger-ui") ||

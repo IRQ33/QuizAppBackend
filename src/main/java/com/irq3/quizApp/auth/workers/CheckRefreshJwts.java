@@ -17,7 +17,7 @@ class CheckRefreshJwts {
     }
 
     @Scheduled(timeUnit = TimeUnit.HOURS, fixedRate = 3)
-    public void deleteExpiredTokens(){
-       refreshJwtService.deleteExpiredTokens();
+    public void deleteExpiredTokens() {
+        refreshJwtService.deleteExpiredTokens();
     }
 }

@@ -34,10 +34,8 @@ public class RefreshJwtServiceImpl implements com.irq3.quizApp.auth.services.Ref
     }
 
 
-    private SecretKey getKey()
-    {
-        if(key==null)
-        {
+    private SecretKey getKey() {
+        if (key == null) {
             key = Keys.hmacShaKeyFor(token.getBytes(StandardCharsets.UTF_8));
         }
         return key;
@@ -46,7 +44,7 @@ public class RefreshJwtServiceImpl implements com.irq3.quizApp.auth.services.Ref
 
     @Override public String generateToken(User user) {
         Date now = new Date();
-        Date expiry = new Date(now.getTime()+1000*60*60*24);
+        Date expiry = new Date(now.getTime() + 1000 * 60 * 60 * 24);
         String token = Jwts.builder().subject(user.getEmail()).signWith(getKey()).expiration(expiry).issuedAt(now).compact();
         JwtRefreshToken refreshToken = JwtRefreshToken.builder()
                 .user_id(user.getId())
@@ -56,7 +54,7 @@ public class RefreshJwtServiceImpl implements com.irq3.quizApp.auth.services.Ref
 
         var tokenMade = jwtRefreshRepository.findByUserId(user.getId());
 
-        if(tokenMade!=null){
+        if (tokenMade != null) {
             jwtRefreshRepository.delete(tokenMade);
         }
         jwtRefreshRepository.save(refreshToken);
@@ -72,9 +70,9 @@ public class RefreshJwtServiceImpl implements com.irq3.quizApp.auth.services.Ref
     @Override public ResultCode<User, String> getUser(String token) {
         System.out.println(token);
         Date expired = jwtRefreshRepository.getJwtRefreshTokenByToken(token).getDateExpired();
-        if(new Date().after(expired) || !jwtRefreshRepository.existsByToken(token)){
+        if (new Date().after(expired) || !jwtRefreshRepository.existsByToken(token)) {
             System.out.println(jwtRefreshRepository.existsByToken(token));
-            System.out.println(new Date().getTime()>expired.getTime());
+            System.out.println(new Date().getTime() > expired.getTime());
             return ResultCode.resultError("Invalid Jwt");
         }
         return ResultCode.resultOk(userRepository.getUserByEmail(getEmail(token)));
@@ -82,8 +80,8 @@ public class RefreshJwtServiceImpl implements com.irq3.quizApp.auth.services.Ref
 
     @Override public void deleteExpiredTokens() {
         List<JwtRefreshToken> list = jwtRefreshRepository.findAll();
-        for (var t : list){
-            if(t.getDateExpired().getTime()<new Date().getTime()){
+        for (var t : list) {
+            if (t.getDateExpired().getTime() < new Date().getTime()) {
                 jwtRefreshRepository.delete(t);
             }
         }

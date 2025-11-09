@@ -17,28 +17,28 @@ class MainController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> createQuiz(@Valid @RequestBody CreateQuizRequest quiz){
+    public ResponseEntity<?> createQuiz(@Valid @RequestBody CreateQuizRequest quiz) {
         var create = quizService.createQuiz(quiz);
         return ResponseEntity.status(create.status()).body(create);
     }
 
 
     @GetMapping("all")
-    public ResponseEntity<?> getQuiz(){
+    public ResponseEntity<?> getQuiz() {
         return ResponseEntity.ok(quizService.getAllQuizzes().o());
     }
 
     @DeleteMapping("delete")
-    public ResponseEntity<?> removeQuiz(@RequestBody DeleteQuizRequest deleteQuizRequest){
+    public ResponseEntity<?> removeQuiz(@RequestBody DeleteQuizRequest deleteQuizRequest) {
         var delete = quizService.removeQuiz(deleteQuizRequest.id());
         return ResponseEntity.status(delete.status()).body(delete);
     }
+
     @GetMapping("search/{name}")
-    public ResponseEntity<?> searchQuizzes(@PathVariable("name") String name){
+    public ResponseEntity<?> searchQuizzes(@PathVariable("name") String name) {
         var search = quizService.searchQuizzes(name);
         return ResponseEntity.status(search.status()).body(search);
     }
-
 
 
 }

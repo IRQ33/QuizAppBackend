@@ -9,10 +9,10 @@ import java.util.List;
 class QuestionConverters {
 
     @Test
-    void testThem(){
+    void testThem() {
         QuestionsConverter q = new QuestionsConverter();
 
-        var test = List.of(new Question("test","test"),new Question("test2","test2"));
+        var test = List.of(new Question("test", "test"), new Question("test2", "test2"));
         var string = q.convertToDatabaseColumn(test);
         System.out.println(string);
         List<Question> questions = q.convertToEntityAttribute(string);

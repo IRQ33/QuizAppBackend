@@ -7,11 +7,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface JwtRefreshRepository extends JpaRepository<JwtRefreshToken,Long> {
+public interface JwtRefreshRepository extends JpaRepository<JwtRefreshToken, Long> {
     JwtRefreshToken getJwtRefreshTokenById(long id);
+
     JwtRefreshToken getJwtRefreshTokenByToken(String token);
+
     //TODO: test it
     @Query(value = "SELECT r FROM JwtRefreshToken r WHERE r.user_id = :id")
     JwtRefreshToken findByUserId(@Param("id") long id);
+
     boolean existsByToken(String token);
 }

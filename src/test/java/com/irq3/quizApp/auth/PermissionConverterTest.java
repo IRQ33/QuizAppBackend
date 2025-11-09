@@ -12,11 +12,11 @@ class PermissionConverterTest {
     PermissionConverter permissionConverter;
 
     @Test
-    public void testConverter(){
+    public void testConverter() {
         permissionConverter = new PermissionConverter();
-        List<Permissions> permissions = List.of(Permissions.USER,Permissions.ADMIN);
+        List<Permissions> permissions = List.of(Permissions.USER, Permissions.ADMIN);
         String perms = permissionConverter.convertToDatabaseColumn(permissions);
-        assertEquals(permissions,permissionConverter.convertToEntityAttribute(perms));
+        assertEquals(permissions, permissionConverter.convertToEntityAttribute(perms));
 
     }
 }

@@ -11,15 +11,21 @@ import com.irq3.quizApp.utils.ResultCode;
 import java.util.Map;
 
 public interface UserService {
-    ResultCode<UserInfoResponse,String> createUser(UserCreateRequest userCreateRequest);
-    ResultCode<String, String> deleteUser(long id);
-    UserInfoResponse getUser(long id);
-    long countOfUsers();
-    ResultCode<UserLoginResponse,String> getRefreshToken(UserLoginEmailRequest userLoginEmailRequest);
-    ResultCode<UserLoginResponse,String> getRefreshToken(UserLoginNameRequest userLoginNameRequest);
-    ResultCode<UserLoginResponse,String> getRefreshToken(Map<String, Object> rawBody);
-    ResultCode<UserLoginResponse,String> getAccesToken(String refreshToken);
+    ResultCode<UserInfoResponse, String> createUser(UserCreateRequest userCreateRequest);
 
+    ResultCode<String, String> deleteUser(long id);
+
+    UserInfoResponse getUser(long id);
+
+    long countOfUsers();
+
+    ResultCode<UserLoginResponse, String> getRefreshToken(UserLoginEmailRequest userLoginEmailRequest);
+
+    ResultCode<UserLoginResponse, String> getRefreshToken(UserLoginNameRequest userLoginNameRequest);
+
+    ResultCode<UserLoginResponse, String> getRefreshToken(Map<String, Object> rawBody);
+
+    ResultCode<UserLoginResponse, String> getAccesToken(String refreshToken);
 
 
 }

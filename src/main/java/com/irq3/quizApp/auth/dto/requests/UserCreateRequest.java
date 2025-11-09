@@ -16,7 +16,7 @@ import java.time.LocalDate;
     @UniqueEmail
     @Email(message = "Mail have to be valid")
     String email;
-    @Size(min = 8,max = 255, message = "Your password have to have minimum 8 characters")
+    @Size(min = 8, max = 255, message = "Your password have to have minimum 8 characters")
     String password;
     @PastOrPresent(message = "You have to type good date of your birth")
     @NotNull(message = "Date of birth can't be null")

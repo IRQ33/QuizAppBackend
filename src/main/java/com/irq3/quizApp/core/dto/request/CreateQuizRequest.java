@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor @NoArgsConstructor @Data
 public class CreateQuizRequest {
     @NotBlank
-    @Size(min = 1,max = 255, message = "Bad size of name")
+    @Size(min = 1, max = 255, message = "Bad size of name")
     String name;
     @NotBlank
     String description;

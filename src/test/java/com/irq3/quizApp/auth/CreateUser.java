@@ -24,19 +24,17 @@ class CreateUser {
     //wrong email
     @Disabled
     @Test
-     void testMail(){
-        UserCreateRequest userCreateRequest = new UserCreateRequest("a","test","12345678", LocalDate.now());
+    void testMail() {
+        UserCreateRequest userCreateRequest = new UserCreateRequest("a", "test", "12345678", LocalDate.now());
 
     }
 
     //wrong password
     @Test
-    void testPassword(){
+    void testPassword() {
 
     }
     //wrong username
-
-
 
 
 }

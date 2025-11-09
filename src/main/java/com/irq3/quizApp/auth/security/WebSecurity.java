@@ -24,7 +24,7 @@ class WebSecurity {
 
     //TODO: Auth2 there
     @Bean SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
-        return security.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(req->{
+        return security.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(req -> {
             req.requestMatchers(
                             "/api/v1/user/register",
                             "/api/v1/user/login",
@@ -42,7 +42,7 @@ class WebSecurity {
         }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
 
-    @Bean PasswordEncoder passwordEncoder(){
+    @Bean PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

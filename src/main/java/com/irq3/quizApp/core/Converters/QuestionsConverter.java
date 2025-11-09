@@ -7,7 +7,7 @@ import jakarta.persistence.AttributeConverter;
 
 import java.util.List;
 
-public class QuestionsConverter implements AttributeConverter<List<Question>,String> {
+public class QuestionsConverter implements AttributeConverter<List<Question>, String> {
     @Override public String convertToDatabaseColumn(List<Question> questions) {
         ObjectMapper mapper = new ObjectMapper();
         try {

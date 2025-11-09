@@ -29,8 +29,8 @@ class QuizServiceImpl implements QuizService {
 
     @Transactional
     @Override public ResultCode<QuizMadeResponse, String> createQuiz(CreateQuizRequest createQuizRequest) {
-        var user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(user==null) return ResultCode.resultError("No user");
+        var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user == null) return ResultCode.resultError("No user");
         Quiz quiz = Quiz.builder().name(createQuizRequest.getName()).hiddenName(createQuizRequest.getName())
                 .content(createQuizRequest.getContent()).description(createQuizRequest.getDescription())
                 .createdAt(LocalDateTime.now()).user_id(user.getId()).build();
@@ -42,10 +42,10 @@ class QuizServiceImpl implements QuizService {
     @Override public ResultCode<String, String> removeQuiz(long id) {
         var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var quiz = quizRepository.getQuizById(id);
-        if(quiz==null){
+        if (quiz == null) {
             return ResultCode.resultBadRequest("There is no quiz with that id");
         }
-        if (user.getId()!=quiz.getId()){
+        if (user.getId() != quiz.getId()) {
             return ResultCode.resultBadRequest("No permissions");
         }
 
@@ -57,10 +57,10 @@ class QuizServiceImpl implements QuizService {
     @Override public ResultCode<QuizInfoResponse, String> getQuiz(long id) {
         var quiz = quizRepository.getQuizById(id);
         var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if((user==null|| user.isMinor())&& quiz.isRestricted()){
+        if ((user == null || user.isMinor()) && quiz.isRestricted()) {
             return ResultCode.resultBadRequest("This quiz is restricted, so you have to be logged in to learn it");
         }
-        if(quiz==null){
+        if (quiz == null) {
             return ResultCode.resultBadRequest("There is no quiz with that id");
         }
         return ResultCode.resultOk(quizMapper.toQuizInfoResponse(quiz));
@@ -69,10 +69,10 @@ class QuizServiceImpl implements QuizService {
     @Transactional
     @Override public ResultCode<QuizInfoResponse, String> changeQuiz(Quiz quiz) {
         var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(quiz==null){
+        if (quiz == null) {
             return ResultCode.resultBadRequest("There is no quiz with that id");
         }
-        if (user.getId()!=quiz.getId()){
+        if (user.getId() != quiz.getId()) {
             return ResultCode.resultBadRequest("No permissions");
         }
 

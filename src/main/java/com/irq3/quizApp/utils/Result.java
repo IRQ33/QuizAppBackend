@@ -11,8 +11,9 @@ public record Result<O, E>(O o, E e) {
     public static <O, E> Result<O, E> resultError(E value) {
         return new Result<>(null, value);
     }
+
     // if no e(error) everything works fine
-    public boolean isOk(){
-        return e==null;
+    public boolean isOk() {
+        return e == null;
     }
 }

@@ -38,7 +38,7 @@ public class Quiz {
     @Column(name = "restricted")
     boolean restricted;
 
-    public void changMe(Quiz quiz){
+    public void changMe(Quiz quiz) {
         this.name = quiz.name;
         this.hiddenName = quiz.hiddenName;
         this.content = quiz.content;

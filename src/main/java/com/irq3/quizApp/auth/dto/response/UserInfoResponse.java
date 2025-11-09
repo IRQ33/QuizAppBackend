@@ -12,10 +12,11 @@ public class UserInfoResponse {
     long id;
     String name;
     LocalDateTime createdAt;
-    public UserInfoResponse(User user){
+
+    public UserInfoResponse(User user) {
         this.id = user.getId();
         this.name = user.getUserName();
-        this.createdAt=user.getCreatedAt();
+        this.createdAt = user.getCreatedAt();
     }
 
 }

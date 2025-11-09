@@ -35,10 +35,8 @@ public class JwtServiceImpl implements JwtService {
         this.userRepository = userRepository;
     }
 
-    private SecretKey getKey()
-    {
-        if(key==null)
-        {
+    private SecretKey getKey() {
+        if (key == null) {
             key = Keys.hmacShaKeyFor(token.getBytes(StandardCharsets.UTF_8));
         }
         return key;
@@ -47,15 +45,15 @@ public class JwtServiceImpl implements JwtService {
     @Override public String generateToken(String refreshToken) {
         String email = refreshJwtService.getEmail(refreshToken.trim());
         Date date = jwtRefreshRepository.getJwtRefreshTokenByToken(refreshToken).getDateExpired();
-        if(date.getTime()<new Date().getTime()){
+        if (date.getTime() < new Date().getTime()) {
             throw new TokenExpiredException();
         }
-        if(!userRepository.existsByEmail(email)){
+        if (!userRepository.existsByEmail(email)) {
             return "No User";
         }
         User user = userRepository.getUserByEmail(email);
         Date createdDate = new Date();
-        Date expiredDate = new Date(createdDate.getTime()+1000*60*5);
+        Date expiredDate = new Date(createdDate.getTime() + 1000 * 60 * 5);
         return Jwts.builder()
                 .subject(user.getEmail())
                 .signWith(getKey())
@@ -63,7 +61,7 @@ public class JwtServiceImpl implements JwtService {
                 .issuedAt(createdDate).compact();
     }
 
-    @Override public ResultCode<String,RuntimeException> getEmail(String token) {
+    @Override public ResultCode<String, RuntimeException> getEmail(String token) {
         try {
             JwtParser parser = Jwts.parser().verifyWith(getKey()).build();
             Claims claims = parser.parseSignedClaims(token).getPayload();
@@ -76,8 +74,8 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override public ResultCode<User, String> getUser(String token) {
-        ResultCode<String,RuntimeException> result = getEmail(token);
-        if(result.isOk()){
+        ResultCode<String, RuntimeException> result = getEmail(token);
+        if (result.isOk()) {
             return ResultCode.resultOk(userRepository.getUserByEmail(result.o()));
         }
         return ResultCode.resultError("Wrong token");

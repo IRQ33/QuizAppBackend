@@ -9,10 +9,15 @@ import com.irq3.quizApp.utils.ResultCode;
 import java.util.List;
 
 public interface QuizService {
-    ResultCode<QuizMadeResponse,String> createQuiz(CreateQuizRequest quiz);
+    ResultCode<QuizMadeResponse, String> createQuiz(CreateQuizRequest quiz);
+
     ResultCode<String, String> removeQuiz(long id);
-    ResultCode<QuizInfoResponse,String> getQuiz(long id);
-    ResultCode<QuizInfoResponse,String> changeQuiz(Quiz quiz);
-    ResultCode<List<QuizInfoResponse>,String> getAllQuizzes();
-    ResultCode<List<QuizMadeResponse>,String> searchQuizzes(String name);
+
+    ResultCode<QuizInfoResponse, String> getQuiz(long id);
+
+    ResultCode<QuizInfoResponse, String> changeQuiz(Quiz quiz);
+
+    ResultCode<List<QuizInfoResponse>, String> getAllQuizzes();
+
+    ResultCode<List<QuizMadeResponse>, String> searchQuizzes(String name);
 }

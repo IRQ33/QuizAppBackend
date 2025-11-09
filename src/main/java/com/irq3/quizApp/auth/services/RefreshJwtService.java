@@ -5,7 +5,10 @@ import com.irq3.quizApp.utils.ResultCode;
 
 public interface RefreshJwtService {
     String generateToken(User email);
+
     String getEmail(String token);
-    ResultCode<User,String> getUser(String token);
+
+    ResultCode<User, String> getUser(String token);
+
     void deleteExpiredTokens();
 }

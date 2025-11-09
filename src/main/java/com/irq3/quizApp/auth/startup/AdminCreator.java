@@ -21,13 +21,13 @@ class AdminCreator implements CommandLineRunner {
         User user = User.builder().userName("Admin123")
                 .email("sigma@gmail.com")
                 .password(passwordEncoder.encode("haslo123"))
-                .permissions(List.of(Permissions.USER,Permissions.ADMIN,Permissions.OWNER))
+                .permissions(List.of(Permissions.USER, Permissions.ADMIN, Permissions.OWNER))
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .dateOfBirth(LocalDate.of(2006,1,22).atStartOfDay())
+                .dateOfBirth(LocalDate.of(2006, 1, 22).atStartOfDay())
                 .build();
 
-        if(!userRepository.existsByEmail(user.getEmail())){
+        if (!userRepository.existsByEmail(user.getEmail())) {
             userRepository.save(user);
         }
 

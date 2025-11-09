@@ -5,6 +5,8 @@ import com.irq3.quizApp.utils.ResultCode;
 
 public interface JwtService {
     String generateToken(String refreshToken);
-    ResultCode<String,RuntimeException> getEmail(String token);
-    ResultCode<User,String> getUser(String token);
+
+    ResultCode<String, RuntimeException> getEmail(String token);
+
+    ResultCode<User, String> getUser(String token);
 }

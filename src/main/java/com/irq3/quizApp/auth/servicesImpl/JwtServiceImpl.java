@@ -67,6 +67,7 @@ public class JwtServiceImpl implements JwtService {
         try {
             JwtParser parser = Jwts.parser().verifyWith(getKey()).build();
             Claims claims = parser.parseSignedClaims(token).getPayload();
+
             return ResultCode.resultOk(claims.getSubject());
         } catch (JwtException e) {
             return ResultCode.resultError(e);

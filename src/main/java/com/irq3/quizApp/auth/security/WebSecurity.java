@@ -25,8 +25,19 @@ class WebSecurity {
     //TODO: Auth2 there
     @Bean SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
         return security.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(req->{
-            req.requestMatchers("/api/v1/user/register", "/api/v1/user/login","/api/v1/user/count","/api/v1/user/access","/getUsers")
-                    .permitAll()
+            req.requestMatchers(
+                            "/api/v1/user/register",
+                            "/api/v1/user/login",
+                            "/api/v1/user/count",
+                            "/api/v1/user/access",
+                            "/getUsers",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html",
+                            "/v3/api-docs/**",
+                            "/v3/api-docs",
+                            "/swagger-resources/**",
+                            "/webjars/**"
+                    ).permitAll()
                     .anyRequest().authenticated();
         }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).build();
     }

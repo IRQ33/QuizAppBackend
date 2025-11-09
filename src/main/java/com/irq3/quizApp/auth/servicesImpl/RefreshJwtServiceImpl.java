@@ -53,6 +53,12 @@ public class RefreshJwtServiceImpl implements com.irq3.quizApp.auth.services.Ref
                 .dateCreated(now)
                 .dateExpired(expiry)
                 .token(token).build();
+
+        var tokenMade = jwtRefreshRepository.findByUserId(user.getId());
+
+        if(tokenMade!=null){
+            jwtRefreshRepository.delete(tokenMade);
+        }
         jwtRefreshRepository.save(refreshToken);
         return token;
     }

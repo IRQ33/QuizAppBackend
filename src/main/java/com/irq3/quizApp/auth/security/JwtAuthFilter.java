@@ -41,15 +41,22 @@ class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
             }
+            throw new RuntimeException("Invalid access key");
         }
-        filterChain.doFilter(request, response);
+
 
 
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getRequestURI().equals("/api/v1/user/register") || request.getRequestURI().equals("/api/v1/user/login")|| request.getRequestURI().equals("/api/v1/user/access");
+        return request.getRequestURI().equals("/api/v1/user/register")
+                || request.getRequestURI().equals("/api/v1/user/login")||
+                request.getRequestURI().equals("/api/v1/user/access") ||
+                request.getRequestURI().startsWith("/v3/") ||
+                request.getRequestURI().startsWith("/swagger-ui") ||
+                request.getRequestURI().equals("/swagger-ui.html") ||
+                request.getRequestURI().startsWith("/webjars/");
     }
 
     private String resolveToken(HttpServletRequest request) {

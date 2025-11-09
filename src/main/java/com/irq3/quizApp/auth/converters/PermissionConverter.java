@@ -11,11 +11,14 @@ import java.util.stream.Collectors;
 public class PermissionConverter implements AttributeConverter<List<Permissions>,String> {
 
     @Override public String convertToDatabaseColumn(List<Permissions> permissions) {
-        return permissions.stream().map(Enum::name).collect(Collectors.joining());
+        return permissions.stream().map(Enum::name).collect(Collectors.joining(","));
     }
 
     @Override public List<Permissions> convertToEntityAttribute(String s) {
         String[] array = s.split(",");
+        var b = Arrays.stream(array)
+                .map(a->Permissions.valueOf(a.trim()))
+                .toList();
 
         return Arrays.stream(array)
                 .map(a->Permissions.valueOf(a.trim()))

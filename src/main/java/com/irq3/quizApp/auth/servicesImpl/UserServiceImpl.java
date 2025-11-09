@@ -55,6 +55,7 @@ class UserServiceImpl implements UserService {
                 .permissions(List.of(Permissions.USER))
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
+                .dateOfBirth(userCreateRequest.getDateTime().atStartOfDay())
                 .build();
         userRepository.save(user);
         return ResultCode.resultOk(new UserInfoResponse(user));

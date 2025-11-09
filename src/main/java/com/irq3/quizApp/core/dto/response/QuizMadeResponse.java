@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 public class QuizMadeResponse {
     private long id;
     private String name;
-
+    private String description;
 
 }

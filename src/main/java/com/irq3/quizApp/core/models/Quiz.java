@@ -35,6 +35,8 @@ public class Quiz {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     LocalDateTime updatedAt;
+    @Column(name = "restricted")
+    boolean restricted;
 
     public void changMe(Quiz quiz){
         this.name = quiz.name;

@@ -53,9 +53,13 @@ class QuizServiceImpl implements QuizService {
         return ResultCode.resultOk("We made it");
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override public ResultCode<QuizInfoResponse, String> getQuiz(long id) {
         var quiz = quizRepository.getQuizById(id);
+        var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if((user==null|| user.isMinor())&& quiz.isRestricted()){
+            return ResultCode.resultBadRequest("This quiz is restricted, so you have to be logged in to learn it");
+        }
         if(quiz==null){
             return ResultCode.resultBadRequest("There is no quiz with that id");
         }
@@ -77,9 +81,15 @@ class QuizServiceImpl implements QuizService {
     }
 
     @Transactional(readOnly = true)
-    @Override public ResultCode<List<QuizInfoResponse>, String> getAllQuizes() {
+    @Override public ResultCode<List<QuizInfoResponse>, String> getAllQuizzes() {
         return ResultCode.resultOk(quizRepository.findAll()
                 .stream().map(quizMapper::toQuizInfoResponse).toList());
+    }
+
+    @Transactional(readOnly = true)
+    @Override public ResultCode<List<QuizMadeResponse>, String> searchQuizzes(String name) {
+        return ResultCode.resultOk(quizRepository.getSimilarQuizzes(name)
+                .stream().map(quizMapper::toQuizMadeResponse).toList());
     }
 
 }

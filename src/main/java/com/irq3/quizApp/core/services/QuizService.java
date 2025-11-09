@@ -13,5 +13,6 @@ public interface QuizService {
     ResultCode<String, String> removeQuiz(long id);
     ResultCode<QuizInfoResponse,String> getQuiz(long id);
     ResultCode<QuizInfoResponse,String> changeQuiz(Quiz quiz);
-    ResultCode<List<QuizInfoResponse>,String> getAllQuizes();
+    ResultCode<List<QuizInfoResponse>,String> getAllQuizzes();
+    ResultCode<List<QuizMadeResponse>,String> searchQuizzes(String name);
 }

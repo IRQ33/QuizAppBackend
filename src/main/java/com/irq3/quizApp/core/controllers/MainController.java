@@ -22,14 +22,23 @@ class MainController {
         return ResponseEntity.status(create.status()).body(create);
     }
 
+
     @GetMapping("all")
     public ResponseEntity<?> getQuiz(){
-        return ResponseEntity.ok(quizService.getAllQuizes().o());
+        return ResponseEntity.ok(quizService.getAllQuizzes().o());
     }
+
     @DeleteMapping("delete")
     public ResponseEntity<?> removeQuiz(@RequestBody DeleteQuizRequest deleteQuizRequest){
         var delete = quizService.removeQuiz(deleteQuizRequest.id());
         return ResponseEntity.status(delete.status()).body(delete);
     }
+    @GetMapping("search/{name}")
+    public ResponseEntity<?> searchQuizzes(@PathVariable("name") String name){
+        var search = quizService.searchQuizzes(name);
+        return ResponseEntity.status(search.status()).body(search);
+    }
+
+
 
 }

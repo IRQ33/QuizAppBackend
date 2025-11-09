@@ -1,0 +1,2 @@
+ALTER TABLE quiz
+    ADD restricted BOOLEAN NOT NULL DEFAULT FALSE;

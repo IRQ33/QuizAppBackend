@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -44,5 +45,12 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     LocalDateTime updatedAt;
+    @Column(name = "date_of_birth")
+    LocalDateTime dateOfBirth;
+
+
+    public boolean isMinor(){
+        return dateOfBirth.isAfter(LocalDate.now().minusYears(18).atStartOfDay());
+    }
 
 }

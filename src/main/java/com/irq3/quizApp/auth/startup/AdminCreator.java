@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,6 +24,7 @@ class AdminCreator implements CommandLineRunner {
                 .permissions(List.of(Permissions.USER,Permissions.ADMIN,Permissions.OWNER))
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
+                .dateOfBirth(LocalDate.of(2006,1,22).atStartOfDay())
                 .build();
 
         if(!userRepository.existsByEmail(user.getEmail())){

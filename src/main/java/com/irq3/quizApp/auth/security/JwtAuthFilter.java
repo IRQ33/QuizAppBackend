@@ -31,7 +31,7 @@ class JwtAuthFilter extends OncePerRequestFilter {
     @Override protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = resolveToken(request);
         if(token!=null) {
-            User user = refreshJwtService.getUser(token).o();
+            User user = jwtService.getUser(token).o();
 
             if(user!=null) {
                 List<SimpleGrantedAuthority> authorities = user.getPermissions().stream()

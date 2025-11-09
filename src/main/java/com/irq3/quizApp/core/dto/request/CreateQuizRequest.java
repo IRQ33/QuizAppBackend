@@ -1,10 +1,13 @@
 package com.irq3.quizApp.core.dto.request;
 
+import com.irq3.quizApp.core.models.Question;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @AllArgsConstructor @NoArgsConstructor @Data
 public class CreateQuizRequest {
@@ -13,7 +16,6 @@ public class CreateQuizRequest {
     String name;
     @NotBlank
     String description;
-    @Size(min = 20)
-    String content;
+    List<Question> content;
 
 }

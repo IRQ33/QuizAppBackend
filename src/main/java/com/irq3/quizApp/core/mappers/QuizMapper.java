@@ -8,6 +8,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface QuizMapper {
     QuizInfoResponse toQuizInfoResponse(Quiz quiz);
-
     QuizMadeResponse toQuizMadeResponse(Quiz quiz);
 }

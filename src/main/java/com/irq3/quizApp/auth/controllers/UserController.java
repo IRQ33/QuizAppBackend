@@ -9,7 +9,6 @@ import com.irq3.quizApp.utils.ResultCode;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -26,7 +25,7 @@ public class UserController {
 
     @Transactional
     @PostMapping("register")
-    public ResponseEntity<ResultCode<UserInfoResponse, String>> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest, BindingResult br) {
+    public ResponseEntity<ResultCode<UserInfoResponse, String>> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
         var create = userService.createUser(userCreateRequest);
         return ResponseEntity.status(create.status()).body(create);
     }

@@ -12,7 +12,6 @@ public interface JwtRefreshRepository extends JpaRepository<JwtRefreshToken, Lon
 
     JwtRefreshToken getJwtRefreshTokenByToken(String token);
 
-    //TODO: test it
     @Query(value = "SELECT r FROM JwtRefreshToken r WHERE r.user_id = :id")
     JwtRefreshToken findByUserId(@Param("id") long id);
 

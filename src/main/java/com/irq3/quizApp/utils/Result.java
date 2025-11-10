@@ -12,7 +12,6 @@ public record Result<O, E>(O o, E e) {
         return new Result<>(null, value);
     }
 
-    // if no e(error) everything works fine
     public boolean isOk() {
         return e == null;
     }

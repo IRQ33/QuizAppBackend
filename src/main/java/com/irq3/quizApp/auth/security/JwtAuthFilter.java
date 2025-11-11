@@ -46,6 +46,7 @@ class JwtAuthFilter extends OncePerRequestFilter {
                 response.setHeader("Content-Type", "application/json");
                 response.getOutputStream().print("{\"errorMessage\":\"You have invalid access key\"}");
                 response.flushBuffer();
+                return;
             }
 
         }
@@ -57,6 +58,8 @@ class JwtAuthFilter extends OncePerRequestFilter {
         return request.getRequestURI().equals("/api/v1/user/register") ||
                 request.getRequestURI().equals("/api/v1/user/login") ||
                 request.getRequestURI().equals("/api/v1/user/access") ||
+                request.getRequestURI().equals("/api/v1/quiz/all") ||
+                request.getRequestURI().startsWith("/api/v1/quiz/search") ||
                 request.getRequestURI().startsWith("/v3/") ||
                 request.getRequestURI().startsWith("/swagger-ui") ||
                 request.getRequestURI().equals("/swagger-ui.html") ||

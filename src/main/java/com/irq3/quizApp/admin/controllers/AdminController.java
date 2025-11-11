@@ -4,14 +4,14 @@ import com.irq3.quizApp.admin.dto.requests.InteractionQuizRequest;
 import com.irq3.quizApp.admin.dto.requests.InteractionRequest;
 import com.irq3.quizApp.admin.services.AdminService;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/v1/admin/")
+@RequestMapping("/api/v1/admin")
 @PreAuthorize("hasRole('ADMIN')")
+@RestController
 public class AdminController {
 
     private final AdminService adminService;
@@ -24,14 +24,18 @@ public class AdminController {
     public ResponseEntity<?> banUser(@RequestBody @Valid InteractionRequest interactionRequest){
         return ResponseEntity.ok(adminService.banUser(interactionRequest));
     }
-    @PutMapping("give_admin")
+    @PutMapping(value = "give_admin", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> giveAdmin(@RequestBody @Valid InteractionRequest interactionRequest){
         return ResponseEntity.ok(adminService.giveAdmin(interactionRequest));
     }
 
-    @PutMapping("restrict_quiz")
+    @PutMapping(value = "restrict_quiz", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> restrictQuiz(@RequestBody @Valid InteractionQuizRequest interactionRequest){
         return ResponseEntity.ok(adminService.restrictQuiz(interactionRequest));
+    }
+    @GetMapping(value = "test", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> adminCheck(){
+        return ResponseEntity.ok("You have admin");
     }
 
 

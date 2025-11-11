@@ -46,8 +46,8 @@ public class UserController {
     @Transactional
     @PostMapping(value = "access", consumes = "application/json")
     public ResponseEntity<ResultCode<UserLoginResponse, String>> getAccesToken(@RequestBody UserAccessTokenRequest token) {
-        var acces = userService.getAccesToken(token.token());
-        return ResponseEntity.status(acces.status()).body(acces);
+        var access = userService.getAccesToken(token.token());
+        return ResponseEntity.status(access.status()).body(access);
     }
 
     @Transactional

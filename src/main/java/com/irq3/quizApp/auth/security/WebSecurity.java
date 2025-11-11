@@ -30,6 +30,8 @@ class WebSecurity {
                             "/api/v1/user/login",
                             "/api/v1/user/count",
                             "/api/v1/user/access",
+                            "/api/v1/quiz/all",
+                            "/api/v1/quiz/search",
                             "/getUsers",
                             "/swagger-ui/**",
                             "/swagger-ui.html",
@@ -37,6 +39,7 @@ class WebSecurity {
                             "/v3/api-docs",
                             "/swagger-resources/**",
                             "/webjars/**"
+
                     ).permitAll()
                     .anyRequest().authenticated();
         }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).build();

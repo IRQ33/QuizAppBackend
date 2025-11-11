@@ -14,7 +14,8 @@ import java.time.Duration;
 @Component
 class BandwidthSecurity implements HandlerInterceptor {
 
-    private final Bucket bucket = Bucket.builder().addLimit(limit -> limit.capacity(5).refillGreedy(5, Duration.ofSeconds(1))).build();
+    //24 / hour
+    private final Bucket bucket = Bucket.builder().addLimit(limit -> limit.capacity(5).refillGreedy(5, Duration.ofHours(1))).build();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

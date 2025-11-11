@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+@theme{
+    --color-quiz-white: #E8F5FD;
+}

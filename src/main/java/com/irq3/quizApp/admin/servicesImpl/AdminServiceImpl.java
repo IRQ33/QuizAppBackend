@@ -13,27 +13,21 @@ import com.irq3.quizApp.auth.repositories.UserRepository;
 import com.irq3.quizApp.core.repositories.QuizRepository;
 import com.irq3.quizApp.utils.AdminGetter;
 import com.irq3.quizApp.utils.ResultCode;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 @Service
 @Primary
+@RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
 
     private final UserRepository userRepository;
     private final QuizRepository quizRepository;
     private final InteractionRepository interactionRepository;
 
-    public AdminServiceImpl(UserRepository userRepository, QuizRepository quizRepository, InteractionRepository interactionRepository) {
-        this.userRepository = userRepository;
-        this.quizRepository = quizRepository;
-        this.interactionRepository = interactionRepository;
-    }
-
-    @Transactional
     @Override public ResultCode<BanUserResponse, String> banUser(InteractionRequest interactionRequest) {
         var user = userRepository.getUserById(interactionRequest.getUserId());
         var admin = AdminGetter.getAdmin();
@@ -54,7 +48,6 @@ public class AdminServiceImpl implements AdminService {
                 .build());
     }
 
-    @Transactional
     @Override public ResultCode<?, String> restrictQuiz(InteractionQuizRequest interactionRequest) {
         var admin = AdminGetter.getAdmin();
         var quiz = quizRepository.getQuizById(interactionRequest.getQuizId());
@@ -77,7 +70,6 @@ public class AdminServiceImpl implements AdminService {
                 .build());
     }
 
-    @Transactional
     @Override public ResultCode<?, String> giveAdmin(InteractionRequest interactionRequest) {
         var user = userRepository.getUserById(interactionRequest.getUserId());
         var admin = AdminGetter.getAdmin();

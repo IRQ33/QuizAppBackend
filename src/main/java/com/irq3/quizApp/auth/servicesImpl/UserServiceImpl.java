@@ -10,7 +10,6 @@ import com.irq3.quizApp.auth.enums.Permissions;
 import com.irq3.quizApp.auth.enums.Tokens;
 import com.irq3.quizApp.auth.exceptions.TokenExpiredException;
 import com.irq3.quizApp.auth.models.User;
-import com.irq3.quizApp.auth.repositories.JwtRefreshRepository;
 import com.irq3.quizApp.auth.repositories.UserRepository;
 import com.irq3.quizApp.auth.services.JwtService;
 import com.irq3.quizApp.auth.services.RefreshJwtService;
@@ -18,6 +17,7 @@ import com.irq3.quizApp.auth.services.UserService;
 import com.irq3.quizApp.utils.ResultCode;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -37,15 +38,6 @@ class UserServiceImpl implements UserService {
     private final ObjectMapper objectMapper;
 
     private final Validator validator;
-
-    UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtRefreshRepository jwtRefreshRepository, RefreshJwtService refreshJwtService, JwtService jwtService, ObjectMapper objectMapper, Validator validator) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.refreshJwtService = refreshJwtService;
-        this.jwtService = jwtService;
-        this.objectMapper = objectMapper;
-        this.validator = validator;
-    }
 
     @Override public ResultCode<UserInfoResponse, String> createUser(UserCreateRequest userCreateRequest) {
         User user = User.builder()

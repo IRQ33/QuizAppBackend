@@ -12,6 +12,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService {
 
     @Value("${jwt.token}")
@@ -28,12 +30,6 @@ public class JwtServiceImpl implements JwtService {
     private final JwtRefreshRepository jwtRefreshRepository;
     private final UserRepository userRepository;
     private SecretKey key;
-
-    public JwtServiceImpl(RefreshJwtService refreshJwtService, JwtRefreshRepository jwtRefreshRepository, UserRepository userRepository) {
-        this.refreshJwtService = refreshJwtService;
-        this.jwtRefreshRepository = jwtRefreshRepository;
-        this.userRepository = userRepository;
-    }
 
     private SecretKey getKey() {
         if (key == null) {

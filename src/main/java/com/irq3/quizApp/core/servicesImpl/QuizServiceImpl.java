@@ -9,25 +9,21 @@ import com.irq3.quizApp.core.models.Quiz;
 import com.irq3.quizApp.core.repositories.QuizRepository;
 import com.irq3.quizApp.core.services.QuizService;
 import com.irq3.quizApp.utils.ResultCode;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 class QuizServiceImpl implements QuizService {
 
     private final QuizRepository quizRepository;
     private final QuizMapper quizMapper;
 
-    public QuizServiceImpl(QuizRepository quizRepository, QuizMapper quizMapper) {
-        this.quizRepository = quizRepository;
-        this.quizMapper = quizMapper;
-    }
 
-    @Transactional
     @Override public ResultCode<QuizMadeResponse, String> createQuiz(CreateQuizRequest createQuizRequest) {
         var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (user == null) return ResultCode.resultError("No user");
@@ -38,7 +34,6 @@ class QuizServiceImpl implements QuizService {
         return ResultCode.resultOk(quizMapper.toQuizMadeResponse(quiz));
     }
 
-    @Transactional
     @Override public ResultCode<String, String> removeQuiz(long id) {
         var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var quiz = quizRepository.getQuizById(id);
@@ -53,7 +48,6 @@ class QuizServiceImpl implements QuizService {
         return ResultCode.resultOk("We made it");
     }
 
-    @Transactional(readOnly = true)
     @Override public ResultCode<QuizInfoResponse, String> getQuiz(long id) {
         var quiz = quizRepository.getQuizById(id);
         var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -66,7 +60,6 @@ class QuizServiceImpl implements QuizService {
         return ResultCode.resultOk(quizMapper.toQuizInfoResponse(quiz));
     }
 
-    @Transactional
     @Override public ResultCode<QuizInfoResponse, String> changeQuiz(Quiz quiz) {
         var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (quiz == null) {
@@ -80,13 +73,11 @@ class QuizServiceImpl implements QuizService {
         return ResultCode.resultOk(quizMapper.toQuizInfoResponse(quiz));
     }
 
-    @Transactional(readOnly = true)
     @Override public ResultCode<List<QuizInfoResponse>, String> getAllQuizzes() {
         return ResultCode.resultOk(quizRepository.findAll()
                 .stream().map(quizMapper::toQuizInfoResponse).toList());
     }
 
-    @Transactional(readOnly = true)
     @Override public ResultCode<List<QuizMadeResponse>, String> searchQuizzes(String name) {
         return ResultCode.resultOk(quizRepository.getSimilarQuizzes(name)
                 .stream().map(quizMapper::toQuizMadeResponse).toList());

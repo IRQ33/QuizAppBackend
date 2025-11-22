@@ -7,6 +7,7 @@ import com.irq3.quizApp.auth.dto.response.UserLoginResponse;
 import com.irq3.quizApp.auth.services.UserService;
 import com.irq3.quizApp.utils.ResultCode;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -14,14 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
 public class UserController {
     private final UserService userService;
 
-
-    UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @Transactional
     @PostMapping("register")

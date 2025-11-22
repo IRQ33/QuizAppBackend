@@ -4,18 +4,17 @@ import com.irq3.quizApp.core.dto.request.CreateQuizRequest;
 import com.irq3.quizApp.core.dto.request.DeleteQuizRequest;
 import com.irq3.quizApp.core.services.QuizService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/quiz/")
 class MainController {
     private final QuizService quizService;
 
-    MainController(QuizService quizService) {
-        this.quizService = quizService;
-    }
 
     @Transactional
     @PostMapping("create")
@@ -42,6 +41,13 @@ class MainController {
     public ResponseEntity<?> searchQuizzes(@PathVariable("name") String name) {
         var search = quizService.searchQuizzes(name);
         return ResponseEntity.status(search.status()).body(search);
+    }
+
+    @Transactional(readOnly = true)
+    @GetMapping("quiz/{id}")
+    public ResponseEntity<?> getQuiz(@PathVariable("id")long id){
+        var getQuiz = quizService.getQuiz(id);
+        return ResponseEntity.status(getQuiz.status()).body(getQuiz);
     }
 
 

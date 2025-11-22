@@ -1,4 +1,4 @@
-package com.irq3.quizApp;
+package Handlers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

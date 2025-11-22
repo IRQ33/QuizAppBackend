@@ -63,7 +63,8 @@ class JwtAuthFilter extends OncePerRequestFilter {
                 request.getRequestURI().startsWith("/v3/") ||
                 request.getRequestURI().startsWith("/swagger-ui") ||
                 request.getRequestURI().equals("/swagger-ui.html") ||
-                request.getRequestURI().startsWith("/webjars/");
+                request.getRequestURI().startsWith("/webjars/")||
+                request.getRequestURI().equals("/online");
     }
 
     private String resolveToken(HttpServletRequest request) {

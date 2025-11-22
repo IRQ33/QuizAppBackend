@@ -1,5 +1,6 @@
 package com.irq3.quizApp.auth.security;
 
+import Handlers.AccesDeniedHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -24,7 +25,7 @@ class WebSecurity {
 
     //TODO: Auth2 there
     @Bean SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
-        return security.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(req -> {
+        return security.exceptionHandling(e -> e.accessDeniedHandler(new AccesDeniedHandler())).csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(req -> {
             req.requestMatchers(
                             "/api/v1/user/register",
                             "/api/v1/user/login",
@@ -32,6 +33,7 @@ class WebSecurity {
                             "/api/v1/user/access",
                             "/api/v1/quiz/all",
                             "/api/v1/quiz/search",
+                            "/online",
                             "/getUsers",
                             "/swagger-ui/**",
                             "/swagger-ui.html",

@@ -9,6 +9,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Service
 @Primary
+@RequiredArgsConstructor
 public class RefreshJwtServiceImpl implements com.irq3.quizApp.auth.services.RefreshJwtService {
     @Value("${jwt.token}")
     String token;
@@ -27,11 +29,6 @@ public class RefreshJwtServiceImpl implements com.irq3.quizApp.auth.services.Ref
     private final UserRepository userRepository;
     private final JwtRefreshRepository jwtRefreshRepository;
     SecretKey key;
-
-    public RefreshJwtServiceImpl(UserRepository userRepository, JwtRefreshRepository jwtRefreshRepository) {
-        this.userRepository = userRepository;
-        this.jwtRefreshRepository = jwtRefreshRepository;
-    }
 
 
     private SecretKey getKey() {

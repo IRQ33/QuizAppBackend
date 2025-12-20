@@ -53,19 +53,6 @@ class JwtAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request,response);
     }
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getRequestURI().equals("/api/v1/user/register") ||
-                request.getRequestURI().equals("/api/v1/user/login") ||
-                request.getRequestURI().equals("/api/v1/user/access") ||
-                request.getRequestURI().equals("/api/v1/quiz/all") ||
-                request.getRequestURI().startsWith("/api/v1/quiz/search") ||
-                request.getRequestURI().startsWith("/v3/") ||
-                request.getRequestURI().startsWith("/swagger-ui") ||
-                request.getRequestURI().equals("/swagger-ui.html") ||
-                request.getRequestURI().startsWith("/webjars/")||
-                request.getRequestURI().equals("/online");
-    }
 
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
